@@ -1,0 +1,123 @@
+---
+title: "STAT PR2"
+author: 
+date: "9/1/2015"
+output: html_document
+---
+
+###ISCAM Investigation 1.2    
+    
+**(c)** How many subjects participated in your study? What proportion of the repsondents agreed that the face with the goatee was Tim? Does this appear to be an "overwhelming majority" to you?   
+    
+*There were 22 subjects participated in this study*   
+*$\frac{16}{22}$ is the proportion of the respondents who chose the face with the goatee as Tim.*    
+*I am unsure if I would call the proportion an overwhelming majority, since it was only 72% of the participants selected the man with the goatee as Tim. However, personally, the proportion is a majority.*
+    
+**(d)** Produce a bar graph of the results. Make sure the axes are well-labeled. Can we conclude from this graph that people use facial prototyping? Explain.   
+    
+```{r}
+#This code is used to create a bar graph, where 16 students chose goatee man and 6 students chose non-goatee man.
+H <- c(16,6)
+barplot(H, main="Do Names Match Faces Results?", xlab="Names", ylab="Class Selection", names.arg=c("Tim","Bob"),
+border="black",ylim = c(0, 22))
+
+```    
+
+*In my opinion, since the graph only represents the number of people who selected Tim or Bob, we can not conclude that people use facial prototyping it.*   
+     
+**(k)** Find and report the p-value from your technology (including appropriate notation for the event you used).   
+    
+```{r}
+#This code is used to compute the p-value.
+Pval <- (1-pbinom(15,22,.5))
+```
+*The p-value is `r Pval` for 16 or more people select the goatee man out of 22 people.*   
+    
+**(l)** Write a one-sentence *interpretation* of the p-value that  you have calculated. Be sure it is clear what you found the probability of and any assumptions underlying the calculation. [*Hint*: Recall the simulations you performed in the Investigation 1.1.]    
+
+*The probability that the picture of the man with the goatee was chosen by 16 or more people randomly out of 22 people is 0.0262.*  
+    
+**(m)** Would you consider the class results to be *statistically significant*? Explain.    
+    
+*The smaller the p-value the stronger the evidence is against the null model. Therefore, I believe that the class results as small as 0.026 is enough to be considered significant.*
+
+    
+**(n)** Based on your calculations, does your class study provide strong evidence that students are likely to match the name Tim to the face with the goatee more than we would expect if they are just guessing?    
+    
+*Because of the small p-value as number 0.026 is between 0.05 and 0.01, the class study does provide strong evidence that students are likely to match the name Tim to the face with the goatee more than we should expect if they are just guessing.*   
+    
+    
+###ISCAM Investigation 1.3: Heart Transplant Mortality    
+    
+**(h)** Open the One Proportion Inference applet and generate 1000 samples from a binomial process with $\pi$=0.15 (under the null model) and n=10. Comment on the shape of the distribution.   
+
+
+```{r}
+#The first part of this code is used to create a random sample to determine the number of people who would live with a benchmark of 15%, and last part of the code is used to create a bar graph with a sample size of 1000.
+sample(0:1, 10, replace=TRUE, prob=c(0.85,0.15))  
+heartDATA <-rbinom(1000, 10, .15)
+sum(heartDATA>4)
+
+barplot(xtabs(~heartDATA), ylim=c(0,400), main="Heart Transplant Mortality", xlab="Number of Patients Who Died", ylab="Number of Simulations")
+``` 
+    
+*The shape of the distribution is skewed right as shown in the figure above.*    
+    
+    
+**(i)** Estimate the p-value from this null distribution. Clearly explain how you did so.   
+```{r}
+#Compute the number of times when 8 or more patients died.
+heartDATA[heartDATA>=8]
+```   
+*So the p-value from this null distribution is 0 from the simulation along with the figure above.*
+    
+**(j)** Check the **Exact Binomial** box to have the applet determine the exact p-value. Report and interpret this value below (what is it the probability of?).    
+
+```{r}
+#This code is used to compute the p-value.
+
+Pval1 <- 1-pbinom(7,10,.15)
+```    
+      
+*The p-value calculates to 0.0000087, which means that out of 10 people the probability of 8 or more people dying is an extremely rare occurance.*   
+      
+**(l)** Suppose that we had focused on survival for 30 days rather than death within 30 days as a "success" in this study. Describe how the hypotheses would change and how the calculation of the binomial p-value would change. Then go ahead and calculate the exact binomial p-value with this set-up. How does its value compare to your answer in (j)? How (if at all) does your conclusio change?    
+    
+*Orginally, the null hypothesis was $H_{o}$: $\pi$= 0.15. In order to calculate the p-value, the probability of 8 or more deaths out of the 10 heart transplant patients was determined. The new null hypothesis is $H_{o}$: $\pi$= 0.85. In order to calculate the p-value, the probability of 2 or less survivors out of the 10 heart transplant patients was determined. The p-value calculation is below:*
+
+```{r}
+#This code is used to create four different methods to compute the p-value.
+pbinom(2,10,.85)
+```  
+
+**How does the conclusion change?**
+*The p-value remains the same as 0.0000087 and so my conclusion remains the same as well since we originally wanted to determine the probability of 8 or more heart transplant patients die within 30 days, which is a rare occurance. Then the probability of 2 or less heart transplant patients live within 30 days is determined, which is also a rare occurance. By determining a rare occurance for both scenarios especially with the exact p-value, it provided us with the same conclusion - the probability of either event occuring is very rare.*
+
+**(m)** Following up on the suspicion tha the sample of size 10 aroused, these researchers proceeded to gather data on the previous 361 patients who recieved a heart transplant at this hospital dating back to 1986. They found 71 deaths.   
+    
+Calculate the sample proportion for these data: *$\frac{71}{361}$ = 0.19667, the proportion for these data is 0.19667*    
+
+Predict whether this is more or less convincing evidence that this hospital's death rate exceeds 0.15? Explain your reasoning.   
+*This is less convincing evidence to the original investigation because the original investigation has $\frac{8}{10} = 0.8$, and the new investigation proportion $\frac{71}{361} \approx 0.19667$ since 0.19667<0.8 and closer to the benchmark of 0.15 then the new evidence is less convincing*    
+    
+Use the One Proportion Inference applet to determine (approximately with simulation, and exactly with the binomial distrubtion) the probabily of finding at least 71 deaths in a sample of 361 if $\pi$ = 0.15.   
+```{r}
+#This code is used to create a random sample with a sample size 1000.
+sample(0:1, 361, replace=TRUE, prob=c(0.15,0.85))  
+heartDATA <-rbinom(1000, 361, .15)
+HD <-sum(heartDATA>=71)
+```
+   
+
+*The probability of 71 or more deaths occuring from a sample size of 361 with benchmark of 15% is $\frac{`r HD`}{1000} \approx$ `r HD/1000`.*
+    
+ 
+    
+###RR Chapter 3 Summary   
+
+*Chapter three in Reproducible Research with R and RStudio begins by introducing basic RStudio concepts and commands for the people who has ever used RStudio before. It covers the fundamental key parts of the R languages including objects and assignment, functions, history, packages, arguments, and provided a few examples of R's set up and structure. Finally, knitr and rmarkdown are introduced with general benefits, uses, processes, and supports to R as a whole through code chunks and knitr package. Personally, this chapter was quite useful and understandable so far for this class. For instance, it provided tips, fundamental frameworks, and basic commands instead of going straight to learning by doing right away as we did in class. Even when I did understand what we did in class, it felt like I was missing and not understanding something so did chapter helped me to clear out confusion and bridged that gap.*
+  
+##SessionInfo:    
+```{r}
+sessionInfo()
+```
