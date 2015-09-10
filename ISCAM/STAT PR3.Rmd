@@ -1,0 +1,109 @@
+---
+title: "STAT PR3"
+date: "9/8/2015"
+output: html_document
+---
+
+###Investigation 1.4
+  
+**(g)** To determine which values are more extreme than 80:   
+How many of the 124 couples would you expect to turn to the right if the process probability equal 0.74?   
+
+*124(0.74) = 91.76 $\approx$ 92.*
+*Therefore, I would expect 91.76 or 92 couples to turn to the right.*
+    
+Is 80 more or less than this expected value?    
+
+*80 is less than the expected value of 92.*   
+    
+What would be a reasonable value to use on the *other* side of the null distribution, for providing evidence against this null hypothesis? Explain.   
+
+*91.76 - 80 = 11.76*    
+*91.76 + 11.76 = 103.52 $\approx$ 104.*   
+*A reasonable value to use on the other side of the null distribution would be 104. One could solve for this value by using the difference between 80 and the expected value, 92, and then add that value to the expected value.*    
+
+
+**(h)** Use the One Proportion Inference applet to estimate the two-sided p-value:    
+```{r}
+pv <-dbinom(80,124,0.74)
+PVal <- sum(dbinom(0:124, 124, .74)[dbinom(0:124, 124, .74)<=pv])
+```
+    
+*From the simulation that was run above, the two-sided p-value is `r PVal`.*
+
+**(j)** Dr. Gunturkun actually conjectured $\frac{2}{3}$ as the process probability of a kissing couple leaning to the right (consistent with some other right-sided tendencies by humans.) Repeat (h) to determine a two-sided p-value for testing this hypothesis. Report the p-value and summarize your conclusion about the plausibility that $\pi$ = $\frac{2}{3}$.    
+```{r}
+npv <-dbinom(80,124,2/3)
+np <-sum(dbinom(0:124, 124, 2/3)[dbinom(0:124, 124, 2/3)<=npv])
+```
+    
+*The new hypothesis, $\pi$ = $\frac{2}{3}$, p-value is `r np`.*
+*`r np` > 0.1, this is not enough evidence against the null hypothesis so we have no evidence that the null hypothesis does not hold.*    
+
+###Investigation 1.5
+
+**(c)** You found in the previous investigation that 0.74 does not appear to be a plausible value for $\pi$, but 0.6667 dose because the two-sided p-value for testing $\pi$ = 0.6667 is larger than 0.05. Use the One Proportion Inference applet to determine the values of $\pi$  such that observing 80 of 124 successes or a result more extreme occurs in at least 5% of samples. [*Hints*: Use values of $\pi$ that are multiples of 0.01 until you can find the boundaries where the exact two-sided p-values change from below 0.05 to above 0.05. Then feel free to "zoom in" to three decimal places of accuracy if you'd like.] One the number line below, indicate with an X which values are rejected and with an O which values are not rejected and therefore considered plausible.    
+
+```{r}
+pil <- 0.0
+exact <-0.0
+while(exact < 0.05){
+  pil <- pil + 0.0001
+  exact <- sum(dbinom(0:124, 124, pil)[dbinom(0:124, 124, pil) <= dbinom(80, 124, pil)])
+}
+pil
+``` 
+    
+```{r}
+piu <- 1.0
+exact <-0
+while(exact < 0.05){
+  piu <- piu - 0.0001
+  exact <- sum(dbinom(0:124, 124, piu)[dbinom(0:124, 124, piu) <= dbinom(80, 124, piu)])
+}
+piu
+```
+    
+**(d)** Repeat (c) but using 0.01 rather than 0.05 as the criterion for rejection/plausibility. [*Hints*: You can check the *Show sliders* box and the slider or edit the orange number to change the value of $\pi$.] Does this "99% confidence interval" include more or fewer values than the one based on the 0.05 criterion? Explain why this makes intuitive sense.   
+
+```{r}
+pil <- 0.0
+exact <-0.0
+while(exact < 0.01){
+  pil <- pil + 0.0001
+  exact <- sum(dbinom(0:124, 124, pil)[dbinom(0:124, 124, pil) <= dbinom(80, 124, pil)])
+}
+pil
+``` 
+    
+```{r}
+piu <- 1.0
+exact <-0
+while(exact < 0.01){
+  piu <- piu - 0.0001
+  exact <- sum(dbinom(0:124, 124, piu)[dbinom(0:124, 124, piu) <= dbinom(80, 124, piu)])
+}
+piu
+``` 
+
+*The 99% confidence interval includes more values than the 95% confidence interval, that would mean that I am 99% certain that the mean difference is in the interval created.  The increase in certainty is done by increasing the margin of error.  Thus, the interval includes more values.*
+    
+
+**(e)** Use technology to verify the confidence interval endpoints that you found in (c). 
+    
+```{r}
+library(binom)
+binom.confint(x=80, n=124, conf.level=0.95)
+```
+
+*Based on , the endpoints of the confidence interval is 0.5566 and 0.7264.*
+*These resulted values are very close to the values in question c.*
+    
+###RR Chapter 4 Summary: 
+
+*The beginning of this chapter discusses file paths for a project as an organizing system in a tree form. README is one of these files or subdirectories containing author(s), topic, copyright information, and how the project’s folders are organized as overviews of everything in the project. Overall, the chapter explains fhow to organize your files in RStudio and the benefits; and simple commands to help find, list, create, and delete information. Helpful commands that can be used in Unix-like Shell were introducede at the end of this chapter. From this chapter, I realized that I would appreciate these information more if I knew those during the first couple weeks of this semester. Yet, I did get a better understanding of how to organize projects for my future assignments.*   
+    
+###SessionInfo()
+```{r}
+sessionInfo()
+```
