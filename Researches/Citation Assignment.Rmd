@@ -1,0 +1,32 @@
+---
+title: "Citation Assignment"
+date: "09/04/2015"
+output: html_document
+nocite: |
+  @seiffge-krenke_bad_2015,
+  @baholo_womens_2015,
+  @inge_seiffge-krenke_dark_2015,
+  @aparicio_conflict_2014,
+  @nyame_survey_2013,
+  @middleton_vulnerability_2014,
+  @seiffge-krenke_dark_2015,
+  @tolman_domestic_2001, 
+  @young-wolff_patterns_2013, 
+  @anderson_perpetrator_2002
+bibliography: Citation.bib
+---
+
+I have decided to investigate the association between abusive relationship with the well-being of the people in that abusive relationship. From this association that I am investigating, I actively search for key words such as abusive relationship, domestic violence, romance relationship, well-beings, manipulation, mental and physical health.  
+
+1. Most researches are seemed very heteronormative and binary with no mention of non-heterosexual relationships such as homosexual, pansexual, bisexual, and so on. 
+
+2. There seems to be heavily more focused on physical abuse over mental abuse. The association may differ based on ethnicity, age, and sexual orientation (although there is little work on this)
+
+3. Those studies and articles I found are very recent with going back to only three years max when one would think that there would be more studies conducted for such a prevalent and serious issue in the society. 
+
+4. There were not much mentioned on the specific type of abuse in those articles.
+
+As a result of these themes, my question on the association between being in an abusive romantic relationship and the partner's well-beings and how this association can transform/change based on the different types of abuse and the severity of it. I would study more on specific categorization of abuse in abusive relationship. Personally, I am interested in investigating how external substances or compounding factors such as usage of drugs and alcohol can affect the general overall of the abusive relationship which then impacts the well-beings of people in that abusive relationship. Moreover, I want to take initiative to learn about how the association may shape differently taking in consideration of ethnicity, age, and sexual orientation. 
+
+
+#References:

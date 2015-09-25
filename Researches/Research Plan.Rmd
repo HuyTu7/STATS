@@ -1,0 +1,36 @@
+---
+title: "Research Plan Assignment"
+output: html_document
+nocite: |
+  @seiffge-krenke_bad_2015,
+  @aparicio_conflict_2014,
+  @middleton_vulnerability_2014,
+  @tolman_domestic_2001,
+  @anderson_perpetrator_2002
+bibliography: Citation.bib
+---
+#Introduction:
+Abusing interaction in relationship is a relevant current social and public health problem that can develops physical and mental problems to people involved in those relationships (@aparicio_conflict_2014). Evidence for this association comes from longitudinal investigations in which being in an abusive relationship has been shown to increase risk of negative well-being (@baholo_womens_2015). The majority of the researches are very recent that are less than 5 years according to my sources. They concentrated on the probability and amount of various unhealthy psychosocial variables such as depression, self-esteem, and substance abuse being increased as the results of being in an abusive relationship (@anderson_perpetrator_2002). Recent victims had significantly higher rates of five psychiatric disorders (depression, generalized anxiety disorder, post-traumatic stress disorder, drug dependence, and alcohol dependence) and health problems than women who never experienced domestic violence. Recent partner violence was also associated with greater material hardship (@tolman_domestic_2001). The association between abusive relationship with the well-being of the people in that abusive relationship is likely to exist and can be investigated and analyzed through more in-depth and specialized researches.
+
+While being in abusive relationship has been shown to increase an individual’s level of unhealthy well-beings in that abusive relations, there are not much studies to show the evidence of how different forms of abuse or aggression (physical and mental) along with different measures of relationships functioning impact differently on the level of well-beings of the individuals in that abusive relationship (@seiffge-krenke_bad_2015). Specifically, domestic violence along with alcohol substance misuse combined are suggested to have develop the risk of significant harm (@middleton_vulnerability_2014). Furthermore, it is also ambiguous with no clear reports on how association may differ based on ethnicity, age, and sexual orientation (@inge_seiffge-krenke_dark_2015). 
+
+The present study will examine young adults from the The National Longitudinal Study of Adolescent to Adult Health (AddHealth). The goals of the analysis will include 1) establishing the relationship between being in an abusive relationship and individual’s happiness in that abusive relationship; 2) determining whether or not the different forms of abuse would make different impact to the well-being state of individuals in that abusive relationship; 3) determine how the association/relationship between being in an abusive relationship and individual’s well-being in that abusive relationship may shape differently taking in consideration of ethnicity, age, and sexual orientation.
+
+
+#Method:
+###Sample
+The goal of fourth wave or Wave IV of National Longitudinal Study of Adolescent to Adult Health (Add Health) is to investigate the causes of health across the life course from the teenage years to young adulthood, and to understand how biological, social, and environmental factors contribute to health over this long time span. It represents sample of adolescents in grades 7-12 in the United States during the 1994-95 school year. The Add Health cohort has been followed into young adulthood with four in-home interviews, the most recent in 2008, when the sample was aged 24-32*. The Wave IV fielded sample consisted of 19,962 of the original 20,745 Wave I respondents. Of the 19,962 cases, 80.25% consented to participate in Wave IV.
+
+###Procedure
+Mainly, the interviews were conducted at the respondents’ homes. Respondents’ work locations, restaurants and coffee shops, libraries, and parent or friend residences are other interview locations include. Wave IV AddHealth interview questions were administered on laptop computers using Blaise Survey Software. 
+
+###Measures
+Current relationship status along with general state of mental well-being of the individual are assessed in the categorical section (“How much do you agree or disagree with the following statements about your relationship with {initials}?”)
+
+Current abusive relationship status was evaluated through physical abuse frequency (“How often (has/did) {initials} (threatened/threaten) you with violence, (pushed/push) or (shoved/shove) you, or (thrown/throw) something at you that could hurt?”) with signs that could be interpreted as mental abuse as well (“How often (have/did) you (insisted/insist) on or (made/make) {initials} have sexual relations with you when (he/she) didn't want to?”) 
+
+
+#Predicted Results or Implications:
+While there are more factors that can contribute to the development and severity of unhealthy well-beings of individuals. However, if individuals in an abusive romantic relationship are more relevant to be subjected with the development and severity of unhealthy well-beings of individuals, they would represent an important population subgroup for targeted domestic violence prevention and abusive relationship prevention programs while establishing a causation relationship between being in an abusive relationship with the individual's well-beings in that abusive relationship.  
+
+#References:

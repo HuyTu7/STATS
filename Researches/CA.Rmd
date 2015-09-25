@@ -1,0 +1,24 @@
+---
+title: "Citation Assignment"
+author: 
+date: "9/4/2015"
+output: html_document
+bibliography: CitationAssignment.bib
+---
+
+I have decided to examine the association between parent involvement at home/school and student achievement in school. Since this is the association I am examining, keywords I used in my search were parent involvement, student achievement, factors of student success, and after-school activities.
+
+After reading the articles and abstracts, it is clear the research agrees that higher parent involvement results in higher student achievement typically.  Here were themes I noticed in my research:
+
+1. There is very little mention of factors that influence level of parent involvement, such as level of education or socioeconomic status.
+
+2. There seems to be little to no research on how low parent involvement can still result in student achievement.
+
+3. When students have a high sense of self-efficacy there is higher student achievement. There is little to no research on how parent involvement can impact this self-efficacy though.
+
+As a result of these themes, I have decided to focus my question on the association between student achievement and parent involvement and how this association can change based on low parent involvement and high parent involvement. I wonder if level of parent involvement has an association between a students' self-efficacy which then impacts the students' achievement.
+
+@lyttle-burns_factors_2011 studies the factors, including parent involvement in academics, that contribute to students dropping out of school. @parrott_how_2010 analyzes the impact high parent involvement can have on student performance in college and beyond. @woolley_context_2007 examines how different level of support results in different levels of student success in different courses. @henry_linking_1992 investigates how socioeconomic status impacts student performance in school. @peters_parental_2012 analyzes how parent involvement and support impacts a student's success in school as well as the student's long-term goals.  @cosden_effects_2004 examines how being involved in after-school activities influences student success depending on the students level of activity. @fan_relationship_2010 studies how the level of parental control in the home can impact student success in school. @wilson_relationship_2010 explores how parental involvement can impact a student's emotional and mental health which then impacts academic achievement.
+
+
+#References
