@@ -1,0 +1,219 @@
+---
+title: "STAT PR6"
+author:
+date: "September 27, 2015"
+output: html_document
+---
+
+###Investigation 1.10   
+
+**Question d.** Now consider calculating a 95% confidence interval for the process probability $\pi$ based on the observed sample proportion $\hat{p}$. Calculate the standard error of $\hat{p}$. Then, how far do you expect to see a sample proportion fall from the underlying process probability? [**Hint**: Assuming a normal distribution ..95%.....]    
+
+```{r}
+p_hat <- 0.645
+SEp_hat <-sqrt((p_hat*(1-p_hat))/124)
+pdist <- 2*SEp_hat
+```
+
+*Standard Error of ($\hat{p}$) = `r SEp_hat`*  
+*Plausible distance = `r pdist`*    
+
+
+**Question e.** Use the distance in (d) and the observed sample proportion of $\hat{p}$ = 0.645 to determine an interval of plausible values for $\pi$, the probability that a kissing couple leans to the right.    
+
+```{r}
+cil <- p_hat-2*sqrt((p_hat*(1-p_hat))/124)
+ciu <- p_hat+2*sqrt((p_hat*(1-p_hat))/124)
+```
+*An interval of plausible values for the probability that a kissing couple leans to the right, $\pi$, are from `r cil` to `r ciu`.*
+
+
+**Question f.** Use technology to more precisely determine the number of standard deviations that capture the middle 95% of the normal distribution with mean = 0 and standard deviation = 1. [*Hint*: In other words, how many standard deviations do you need to go on each side of zero to capture the middle 95% of the distribution?]     
+```{r}
+st1 <-qnorm(0.025, 0, 1)
+st2 <-qnorm(0.975, 0, 1)
+```
+*The interval from `r st1` and `r st2`, is the interval that captures the standard deviations of a 95% of the normal distribution.*    
+
+
+**Question g.** Find the critical value for a 90% confidence interval. Is it larger or smaller than with 95% confidence? Why does this make sense?   
+```{r}
+criV1 <-qnorm(0.05, 0, 1)
+criV2 <-qnorm(0.95, 0, 1)
+```
+*The critical values for 90% confidence interval are `r criV1` and `r criV2`. It makes sense that these values are smaller than the 95% confidence because we are working with an smaller confience interval, so we will have less values in the critical value.*
+
+
+**Question h.** Based on this formula, what is midpoint of the interval? What determines the width of the interval?    
+
+```{r}
+#Calcualte the 90% z-confidence interval
+zcil <-p_hat-1.645*sqrt(p_hat*(1-p_hat)/124)
+zciu <-p_hat+1.645*sqrt(p_hat*(1-p_hat)/124)
+sum <-zcil+zciu
+diff <-zciu-zcil
+
+#Calcualte the 95% z-confidence interval
+zcil2 <-p_hat-1.96*sqrt(p_hat*(1-p_hat)/124)
+zciu2 <-p_hat+1.96*sqrt(p_hat*(1-p_hat)/124)
+sum2 <-zcil2+zciu2
+diff2 <-zciu2-zcil2
+```
+*For the 90% confidence interval:*
+
+*-The midpoint  is $\frac{`r sum`}{2}$ = `r sum/2`* 
+
+*-The width is determined by solving for the difference between the lower, `r zcil`, value and upper value, `r zciu`, of the confidence interval. The width for the  `r diff`.* 
+
+*For the 95% confidence interval:* 
+
+*-The midpoint  is $\frac{`r sum2`}{2}$ = `r sum2/2`*
+
+*-The width is determined by solving for the difference between the lower value, `r zcil2`, and upper value, `r zciu2`, of the confidence interval. The width is `r diff2`.*
+
+
+**Question k.** How do the midpoint and width of the 90% confidence interval compare to those of the 95% confidence interval? Also verify your claims in (h) about the midpoint and width based on this 90% confidence interval.      
+
+*90% confidence interval: midpoint = `r sum/2` & width =  `r diff`*   
+*95% confidence interval: midpoint = `r sum2/2` & width =  `r diff2`*   
+*The midpoints of 90% and 95% confidence intervals actually have the same value, `r sum/2`* 
+
+*The 95% confidence interval value, `r diff2`,is bigger than The 90% confidence interval value, `r diff`.*
+
+
+**Question l.** Now use technology to find and report the 90% and 95% confidence intervals for the probability that a kissing couple leans to the right. Did the widths and midpoints behave as you conjectured above?
+
+```{r}
+library(binom)
+#90% confidence interval
+a <- binom.confint(x=80, n=124, conf.level=0.90)
+a
+#95% confidence interval
+b <- binom.confint(x=80, n=124, conf.level=0.95)
+b
+```
+*Yes, the widths and midpoints behaved as I solved part h.*
+
+
+**Question n.** Suppose you are planning your own study about kissing couples. Before you collect the data, you know you would like the margin-of-error to be at most 3 percentage points and that you will use a 95% confidence level. Use this information to determine the sample size necessary for your study. [This is a very common question asked of statisticians. Think about how to determine this using the z-interval formula and whether you would answer differently based on whether you have any prior guess about $\pi$. Without a preliminary study, you can use 0.5 as an estimate of this probability, in order to produce a conservation estimate that makes the required sample size as large as possible. Compare these results. Also think about how much more difficult this question would be to answer using the binomial distribution.]    
+
+```{r}
+#Calculate sample size:
+#Using sample proportion
+p_h <-80/124
+zn <-1.96/0.03
+a <-(zn)^2
+b <-p_h*(1-p_h)
+c <-a*b
+
+#Using pi= 0.5
+pi <-0.5 
+a2 <-(1.96/0.03)^2
+b2 <-pi*(1-pi)
+c2 <-a2*b2
+```
+*The sample size necessary for my study:*
+
+*- Using sample proportion: `r c`*    
+
+*- Using 0.5 for $\pi$: `r c2`*  
+  
+
+**Question t.** Change the number of intervals to **200** and press **Sample** four more times. Examine the Running Total for these 1000 intervals. Is this percentage (of intervals that successfully contain the value underlying parameter value 0.667) close to what you expect?     
+```{r}
+#Examine the Running Total for these 1000 intervals
+pi <-0.667
+x <-rbinom(1000, 124, 0.667)
+nphat <-x/124
+zcil4 <-nphat-1.96*sqrt((nphat*(1-nphat))/124)
+zciu4 <-nphat+1.96*sqrt((nphat*(1-nphat))/124)
+final1 <-mean(zcil4<0.667 & zciu4>0.667)
+final1
+```
+*Yes, the percentage, `r final1`, is close to what I expected, which was 95%.*
+
+
+###Investigation 1.11   
+
+**Question a.** Use the one sample z-interval method to find a 95% confidence interval for the probability of the heart transplantation death at St. George's hospital. Does anything bother you about doing this?  
+
+```{r}
+#Calculate the Wald interval
+p_hat2 <-0.8
+zcil5 <-p_hat2-1.96*sqrt(p_hat2*(1-p_hat2)/10)
+zciu5 <-p_hat2+1.96*sqrt(p_hat2*(1-p_hat2)/10)
+```
+*The 95% confidence interval for the probability of a heart transplantation death at St. George's hospital is between `r zcil5` and `r zciu5`.*
+
+*Since there is not at least 10 successes or failures, I am bothered about finding the z-confidence interval.*
+
+
+**Question b.** In the Simulating Confidence Intervals applet, suppose the actual process probability of death is 0.15 and you plan to take a sample of 10 operations and apply the z-interval procedure. use the applet to explore the reliability (empirical coverage rate) of this method for these data. That is, generate 1000 intervals (200 at a time) with $\pi$ = 0.15 and $n$ = 10 and see how many of these intervals succeed in capturing the actual value of the population parameter (0.15). Is this coverage rate close to 95%?      
+
+```{r}
+#Calculate the Wald interval coverage
+
+x2 <-rbinom(1000, 10, 0.15)
+p_hat3 <-x2/10
+zcil6 <-p_hat3-1.96*sqrt((p_hat3*(1-p_hat3))/10)
+zciu6 <-p_hat3+1.96*sqrt((p_hat3*(1-p_hat3))/10)
+final2 <-mean(zcil6<0.667 & zciu6>0.667)
+final2
+```
+*No, the percentage `r final2` is mathematically not close to 95%.*
+
+
+**Question c.** Explain why you should not expect the coverage rate to be close to 95% in the case.   
+*Since we don't have 10 successes or failures, we should not expect the coverage rate to be close to 95%.*
+
+
+**Question d.** Investigate the reliabbility of the Plus Four procedure: In the **Simulating Confidence Intervals* applet. Is this coverage rate close to 95%? Is this an improvement over the (Wald) z-interval?   
+
+```{r}
+#Calculate the Plus Four coverage rate
+x3 <-rbinom(1000, 10, 0.15)
+p_hat4 <-(x3+2)/(10+4)
+zcil7 <-p_hat4-1.96*sqrt((p_hat4*(1-p_hat4))/(10+4))
+zciu7 <-p_hat4+1.96*sqrt((p_hat4*(1-p_hat4))/(10+4))
+final3 <-mean(zcil7<0.15 & zciu7>0.15)
+final3
+```
+*Yes, the percentage, `r final3`, is close to 95%. This is an improvement over the Wald z-interval for the percentage to be much closer to 95%.*
+
+**Question f.**Use the Plus Four procedure to determine and interpret a 95% confidence interval for the probability of a death during a heart transplant operation at St. George's hospital. [*Hints*: You can do the calculation ether by hand, first finding $\tilde{p}$ and z*, or with the Theory-Based Inference applet or Mini-tab or R by telling the technology there were 4 more operations consisting of two more deaths than in the actual sample.]   
+
+```{r}
+#Calculate the Plus Four Interval 
+p_hat5 <-(8+2)/(10+4)
+pfourl <-p_hat5-1.96*sqrt(p_hat5*(1-p_hat5)/(10+4))
+pfourr <-p_hat5+1.96*sqrt(p_hat5*(1-p_hat5)/(10+4))
+```
+*The Plus Four 95% confidence interval is in between `r pfourl` and `r pfourr` representing the probability that a heart transplant patient at St. George's hospital will die.* 
+   
+
+**Question g.**Repeat for the larger study at St. George's that revealed 71 deaths out of 361 operations. How do the 95% Wald and Plus Four intervals compare in this case?      
+
+```{r}
+#Calculate the Wald interval
+p_hat6 <-71/361
+waldl <-p_hat6-1.96*sqrt(p_hat6*(1-p_hat6)/361)
+waldr <-p_hat6+1.96*sqrt(p_hat6*(1-p_hat6)/361)
+
+#Calculate the Plus Four interval
+p_hat7 <-(71+2)/(361+4)
+pfourl2 <-p_hat7-1.96*sqrt(p_hat7*(1-p_hat7)/(361+4))
+pfourr2 <-p_hat7+1.96*sqrt(p_hat7*(1-p_hat7)/(361+4))
+```
+
+*-95% Wald interval: `r waldl` to `r waldr`*    
+*-95% Plus Four interval: `r pfourl2` to `r pfourr2`*   
+*The Wald interval is a little bit smaller than the Plus Four interval. These two intervals are quite similar nonetheless.*
+
+
+###RR Chapter 7   
+*This chapter focuses on cleaning up one’s gathered data in order to make the work more presentable, readable, and especially understanable. It concentrates on how to incorportate statistical analysis as part of a reproducible workflow with knitr/rmarkdown. Embedding these commands while tying these files together with a makefile into a process would help to make researchers' work more reproducible, easier to backtrack, more understandable, and cleaner. This chapter provided me with commands that can help me make my data more understandable for the future researches and especially the data management assignment.*
+
+###SessionInfo()    
+```{r}
+sessionInfo()
+```
