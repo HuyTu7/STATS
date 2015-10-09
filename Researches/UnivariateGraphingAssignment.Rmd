@@ -1,5 +1,5 @@
 ---
-title: "Data Management Assignment"
+title: "Univariate Graphing Assignment"
 author: ""
 date: "`r Sys.Date()`"
 output: html_document
@@ -155,7 +155,7 @@ ggplot(data = na.omit(NDF), aes(x = SexualAssaults, fill = SexualAssaults)) +
   guides(fill = guide_legend(title = "The frequency of non-consensual sexual activities"))
 ```
 
-The sixth graph portrays the variables related to the amount of time that the individual spent together with their significant other in a sexual or romantic relationship. I omitted the NA population so the graph can be easily analyzed and representable to identify the behavior. The mean of the graph is around at 4.576 years and the median is 4 years. 
+The sixth graph portrays the variables related to the amount of time that the individual spent together with their significant other in a sexual or romantic relationship. I omitted the NA population so the graph can be easily analyzed and representable to identify the behavior. The mean of the graph is around at 4.576 years and the median is 4 years. The graph distribution is skewed right.
 ```{r}
 NDF$TimeSpent <- gsub(",", "", NDF$TimeSpent)   # remove comma
 NDF$TimeSpent <- as.numeric(NDF$TimeSpent)
@@ -165,7 +165,7 @@ fivenum(NDF$TimeSpent)
 ```
 
 
-The seventh graph portrays the variables related to the amount of time that the individual spent together with their significant other in a sexual or romantic relationship. I omitted the NA population so the graph can be easily analyzed and representable to identify the behavior. The mean of the graph is around at 2.803 nights and the median is 2.0 years. 
+The seventh graph portrays the variables related to the amount of time that the individual spent together with their significant other in a sexual or romantic relationship. I omitted the NA population so the graph can be easily analyzed and representable to identify the behavior. The mean of the graph is around at 2.803 nights and the median is 2.0 years. The graph distribution is skewed right.
 ```{r}
 NDF$NightsSpent <- gsub(",", "", NDF$NightsSpent)   
 NDF$NightsSpent <- as.numeric(NDF$NightsSpent)

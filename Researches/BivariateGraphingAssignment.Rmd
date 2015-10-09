@@ -1,5 +1,5 @@
 ---
-title: "Data Management Assignment"
+title: "Bivariate Graphing Assignment"
 author: ""
 date: "`r Sys.Date()`"
 output: html_document
@@ -155,7 +155,7 @@ ggplot(data = na.omit(NDF), aes(x = SexualAssaults, fill = SexualAssaults)) +
   guides(fill = guide_legend(title = "The frequency of non-consensual sexual activities"))
 ```
 
-The sixth graph portrays the variables related to the amount of time that the individual spent together with their significant other in a sexual or romantic relationship. I omitted the NA population so the graph can be easily analyzed and representable to identify the behavior. The mean of the graph is around at 4.576 years and the median is 4 years. 
+The sixth graph portrays the variables related to the amount of time that the individual spent together with their significant other in a sexual or romantic relationship. I omitted the NA population so the graph can be easily analyzed and representable to identify the behavior. The mean of the graph is around at 4.576 years and the median is 4 years. The graph distribution is skewed right.
 ```{r}
 NDF$TimeSpent <- gsub(",", "", NDF$TimeSpent)   # remove comma
 NDF$TimeSpent <- as.numeric(NDF$TimeSpent)
@@ -165,11 +165,44 @@ fivenum(NDF$TimeSpent)
 ```
 
 
-The seventh graph portrays the variables related to the amount of time that the individual spent together with their significant other in a sexual or romantic relationship. I omitted the NA population so the graph can be easily analyzed and representable to identify the behavior. The mean of the graph is around at 2.803 nights and the median is 2.0 years. 
+The seventh graph portrays the variables related to the amount of time that the individual spent together with their significant other in a sexual or romantic relationship. I omitted the NA population so the graph can be easily analyzed and representable to identify the behavior. The mean of the graph is around at 2.803 nights and the median is 2.0 years. The graph distribution is skewed right.
 ```{r}
 NDF$NightsSpent <- gsub(",", "", NDF$NightsSpent)   
 NDF$NightsSpent <- as.numeric(NDF$NightsSpent)
 hist(NDF$NightsSpent, xlab = "Nights Spent Together On Average Week", main= "The days on an average week that the individual \n spent with their significant other", col= "light blue", breaks=c(0,1,2,3,4,5,6,7))
 summary(NDF$NightsSpent)
 fivenum(NDF$NightsSpent)
+```
+
+```{r, fig.width = 14, fig.height = 10}
+ggplot(data = NDF, aes(x = PhysicalAbuseAttempts, fill = SatisfactionWConflict)) + 
+  geom_bar(position = "fill") +
+  theme_bw() + 
+  labs(x = "", y = "Fraction", 
+       title = "Fraction of Physical Abuse Attempts Frequencies \notargeting individuals in the relationship \nby their Statisfaction Level with Conflict") + 
+  scale_fill_manual(values = c("red", "green", "orange", "blue", "violet"), name = "Physical Abuse Status") + 
+  guides(fill = guide_legend(reverse = TRUE)) + 
+  theme(axis.text.x  = element_text(angle = 85, vjust = 0.5, size = 14))
+```
+
+```{r, fig.width = 14, fig.height = 10}
+ggplot(data = NDF, aes(x = SexualAssaults, fill = SatisfactionWConflict)) + 
+  geom_bar(position = "fill") +
+  theme_bw() + 
+  labs(x = "", y = "Fraction", 
+       title = "Fraction of Non-Consensual Sexual Activities Frequencies \ntargeting individuals in the relationship \nby their Statisfaction Level with Conflict") + 
+       scale_fill_manual(values = c("red", "green", "orange", "blue", "violet"), name = "Physical Abuse Status") + 
+       guides(fill = guide_legend(reverse = TRUE)) + 
+       theme(axis.text.x  = element_text(angle = 85, vjust = 0.5, size = 14))
+```
+
+```{r, fig.width = 14, fig.height = 10}
+ggplot(data = NDF, aes(x = HappinessLevel, fill = SatisfactionWConflict)) + 
+        geom_bar(position = "fill") +
+  theme_bw() + 
+  labs(x = "", y = "Fraction", 
+       title = "Fraction of Happiness Level of individuals in the relationship \nby their Statisfaction Level with Conflict") + 
+  scale_fill_manual(values = c("red", "orange", "green",  "blue", "violet"), name = "Happiness Level Status") + 
+  guides(fill = guide_legend(reverse = TRUE)) + 
+  theme(axis.text.x  = element_text(angle = 85, vjust = 0.5, size = 14))
 ```
