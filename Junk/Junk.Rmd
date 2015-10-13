@@ -1,0 +1,13 @@
+---
+title: "Junk"
+author: "Huy"
+date: "8/24/2015"
+output: html_document
+bibliography: Junk.bib
+---
+#Some Math
+
+$\bar{x}$
+$\bar{x} = \sum_{i=1}^{n}\frac{x-1}{n} \iff$
+
+library(PASWR2)

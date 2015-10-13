@@ -92,17 +92,17 @@ while(sum(dbinom(l:20,20,.250))&gt;0.05)
 #Find the rejection region.
 nullprob &lt;-rbinom(1000, 20, 0.250)
 empP &lt;-length(nullprob[nullprob&gt;=l])</code></pre>
-<p><em>The empirical probability that the outcome is in the rejection region is 0.038 after the simulation results.</em></p>
+<p><em>The empirical probability that the outcome is in the rejection region is 0.037 after the simulation results.</em></p>
 <p><strong>(h)</strong> Describe what Type I error means in this context.<br /><em>The manager is convinced with evidences that the player has improved his batting average when the player actually has not improved his batting average.</em></p>
 <p><strong>(i)</strong> Step two is to now consider the 0.333 hitter’s point of view: What is the empirical probability that he obtains enough hits for the null hypothesis (of him being a 0.250 hitter) to be rejected? In other words, what is the empirical probability that the outcome is in the rejection region? [<em>Hint</em>: think about which distribution to look at to answer this question.]</p>
 <pre class="r"><code>#Finding the rejection region
 sample(0:1, 20, replace=TRUE, prob=c(1/3,2/3))  </code></pre>
-<pre><code>##  [1] 1 1 1 1 1 1 1 0 0 1 1 1 1 1 1 1 1 0 1 0</code></pre>
+<pre><code>##  [1] 1 1 1 1 0 1 1 1 0 1 1 0 1 0 1 1 1 0 1 0</code></pre>
 <pre class="r"><code>altprob &lt;-rbinom(1000, 20, 1/3)
 empProb &lt;-sum(altprob&gt;=9)
 empProb</code></pre>
-<pre><code>## [1] 191</code></pre>
-<p><em>The empirical probability that he obtains enough hits for the null hypothesis or the outcome is in the rejection region is <span class="math">\(\frac{191}{1000}\)</span> <span class="math">\(\approx\)</span> 0.191 after the simulation.</em></p>
+<pre><code>## [1] 184</code></pre>
+<p><em>The empirical probability that he obtains enough hits for the null hypothesis or the outcome is in the rejection region is <span class="math">\(\frac{184}{1000}\)</span> <span class="math">\(\approx\)</span> 0.184 after the simulation.</em></p>
 <p><strong>(p)</strong> What might the player ask for in order to have a better chance of showing that his success probability really has improved? Explain.</p>
 <p><em>The player should ask for more number of bats or a larger sample size so there would be less overlap in the two sampling distributions to have more power</em></p>
 <p><strong>(s)</strong> What is the approximate power of the test for a 0.333 hitter with this cut-off value? How does this approximate power compare to what you found in (i) with a sample size of 20 at-bats?</p>
@@ -118,8 +118,8 @@ i</code></pre>
 <pre class="r"><code>p &lt;- rbinom(n, 100, 0.333)
 power &lt;- length(p[p&gt;=i])/n #power or probability of type 2 errors
 power</code></pre>
-<pre><code>## [1] 0.577</code></pre>
-<p><em>With the increased number of trials, the power is 0.577 which definitely improved along with the probability that the hitter would hit the ball.</em></p>
+<pre><code>## [1] 0.563</code></pre>
+<p><em>With the increased number of trials, the power is 0.563 which definitely improved along with the probability that the hitter would hit the ball.</em></p>
 <p><strong>(u)</strong> Now determine the rejection region so that the probability of Type I error (level of significance) is at most 0.01 (still with a sample size of 100 at-bats).</p>
 <pre class="r"><code>n &lt;- 1000
 i &lt;- 1
@@ -161,7 +161,7 @@ Power &lt;- 1 - Type2</code></pre>
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] magrittr_1.5    formatR_1.2     tools_3.2.1     htmltools_0.2.6
-##  [5] yaml_2.1.13     stringi_0.5-5   rmarkdown_0.7   knitr_1.11     
+##  [5] yaml_2.1.13     stringi_0.5-5   rmarkdown_0.8   knitr_1.11     
 ##  [9] stringr_1.0.0   digest_0.6.8    evaluate_0.7.2</code></pre>
 </div>
 

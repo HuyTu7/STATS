@@ -1,0 +1,106 @@
+---
+title: "PR1"
+author: "Huy Tu"
+date: "8/24/2015"
+output: html_document
+---
+
+# (i)  
+After at least 1000 trials, complete the table below.    
+
+```{r, label = "RBi"}
+babies <- c("Marvin", "Willie", "Billy", "Sam")
+nights <- 1000
+NumberCorrect <- numeric(nights)
+for(i in 1:nights){
+  shuffle <- sample(babies, size = 4, replace = FALSE)
+  NumberCorrect[i] <- sum(babies == shuffle)
+}
+xtabs(~NumberCorrect)
+TAsi <- xtabs(~NumberCorrect)/nights
+TAsi
+```
+*The R simulation with 1,000 trials/nights returns and estimated probability that zero mothers receive thier own baby of `r TAsi[1]`.*
+
+
+
+# (o) 
+How many different outcomes are there for returning four babies to their mothers? What is each outcome’s probability of occurring for any trial?
+
+
+```{r}
+library(combinat)
+library(MASS)
+Omega <- permn(babies)
+n <- length(Omega) # 
+NumberCorrect <- numeric(n)
+for(i in 1:n){
+NumberCorrect[i] <- sum(Omega[[i]] == babies)
+}
+FA <- xtabs(~NumberCorrect)/n
+FA
+TA <- fractions(xtabs(~NumberCorrect)/n)
+TA
+```
+
+*There are `r n` possible outcomes for returning the four babies to their mothers.  The possible outcomes are stored in the variable `Omega`.  The probability of each outcome is 1/24.*
+
+```{r}
+Omega
+```
+
+
+Test
+=====================================================
+|Number of matches |  0  |  1  |  2  |  3  |  4  |
+|----------------:|:----|-----|-----|-----|:---:|
+|Proportion       |.373 |.334 |.258 | 0   |.035 |
+
+
+
+
+#ISCAM Investigation 1.1: Friend or Foe?
+
+
+a. What proportion of these infants chose the helper toy? Is this more than half (majority)? Alos sketch by hand a simple bar group to display the results for this sample (one bar for each toy, with heights representing the proportion of times taht toy was picked, bars are separated). 
+
+These infants chose the helper toy at the proportion of .875. This is definitely more than half (majority).
+
+
+```{r}
+dat <- data.frame(
+  Choice = factor(c("Helper","Hinderer"), levels=c("Helper","Hinderer")),
+  Proportion = c(.875, .125)
+)
+dat
+#> Choice Proportion
+#> 1 Helper       .875
+#> 2 Hinderer     .125
+
+# Load the ggplot2 package 
+library(ggplot2)
+choice <- c(.875, .125)
+barplot(choice, main="Proportion of Helper and Hinder", xlab="choice",  
+   ylab="proportion", names.arg=c("helper","hinderer"), border="black",ylim = c(0, 1))
+
+```
+
+(f) Explain why looking at such “could have been” results will be useful to us.
+
+The "could have been" results will provide a good representation of how a true random simulation would result. A bell curve with the center around 8. Consequently, the "could have been" results would show how unlikely 14 out of 16 would occur. 
+
+
+(g) Flip a coin 16 times, representing the 16 infants in the study (one trial or repetition from this random
+process). Let a result of heads mean that the infant chooses the helper toy, tails for the hinderer toy.
+Tally the results below and count how many of the 16 chose the helper toy:
+
+```{r}
+heads <- sum(sample(0:1, 16, replace = TRUE))
+tails <- (16 - heads)
+```
+
+(h) Repeat this two more times. Keep track of how many infants, out of the 16, choose the helper.
+Record this number for all three of your repetitions (including the one from the previous question):
+
+
+

@@ -80,13 +80,13 @@ img {
 &gt; xtabs(~NumberCorrect)</code></pre>
 <pre><code>NumberCorrect
   0   1   2   4 
-381 346 235  38 </code></pre>
+368 356 239  37 </code></pre>
 <pre class="r"><code>&gt; TAsi &lt;- xtabs(~NumberCorrect)/nights
 &gt; TAsi</code></pre>
 <pre><code>NumberCorrect
     0     1     2     4 
-0.381 0.346 0.235 0.038 </code></pre>
-<p><em>The R simulation with 1,000 trials/nights returns and estimated probability that zero mothers receive their own baby of 0.381.</em></p>
+0.368 0.356 0.239 0.037 </code></pre>
+<p><em>The R simulation with 1,000 trials/nights returns and estimated probability that zero mothers receive their own baby of 0.368.</em></p>
 <ol start="15" style="list-style-type: lower-alpha">
 <li>How many different outcomes are there for returning four babies to their mothers? What is each outcome’s probability of occurring for any trial?</li>
 </ol>
@@ -205,8 +205,8 @@ img {
 &gt; xtabs(~simulation)</code></pre>
 <pre><code>simulation
 Head Tail 
-   9    7 </code></pre>
-<p><em>There were 9 heads for the total number of heads in 16 tosses.</em></p>
+   8    8 </code></pre>
+<p><em>There were 8 heads for the total number of heads in 16 tosses.</em></p>
 <ol start="8" style="list-style-type: lower-alpha">
 <li>Repeat this two more times. Keep track of how many infants, out of the 16, choose the helper. Record this number for all three of your repetitions (including the one from the previous question):</li>
 </ol>
@@ -230,9 +230,9 @@ Head Tail
 <tbody>
 <tr class="odd">
 <td align="center"><strong>Number of Heads</strong></td>
+<td align="left"><em>8</em></td>
+<td align="left"><em>5</em></td>
 <td align="left"><em>7</em></td>
-<td align="left"><em>10</em></td>
-<td align="left"><em>9</em></td>
 </tr>
 </tbody>
 </table>
@@ -241,7 +241,7 @@ Head Tail
 </ol>
 <pre class="r"><code>&gt; d &lt;-sample(c(&quot;Helper&quot;, &quot;Hinderer&quot;), 16, replace=TRUE)
 &gt; dhelpers &lt;-sum(d==&quot;Helper&quot;)</code></pre>
-<p><em>There were 11 heads for the “could have been” outcome.</em></p>
+<p><em>There were 7 heads for the “could have been” outcome.</em></p>
 <ol start="13" style="list-style-type: lower-alpha">
 <li><strong>Uncheck</strong> the <strong>Animate</strong> box and press <strong>Draw Samples</strong> four more times, each time recording the number of the 16 infants who choose the helper toy. Did you get the same number of heads all five times?</li>
 </ol>
@@ -270,10 +270,10 @@ Head Tail
 <tbody>
 <tr class="odd">
 <td align="center"><strong>Number of Heads</strong></td>
-<td align="left"><em>11</em></td>
 <td align="left"><em>7</em></td>
+<td align="left"><em>10</em></td>
 <td align="left"><em>7</em></td>
-<td align="left"><em>9</em></td>
+<td align="left"><em>8</em></td>
 <td align="left"><em>7</em></td>
 </tr>
 </tbody>

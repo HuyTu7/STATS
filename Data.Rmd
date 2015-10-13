@@ -1,0 +1,14 @@
+library(PDS)
+library(dplyr)
+AH <- tbl_df(AddHealth)  %>%
+  mutate(HeightIn = H1GH59A*12 + H1GH59B)
+summary(AH)
+
+AddHealth$H1GH59A[AddHealth$H1GH59A == 96 | AddHealth$H1GH59A == 98] <- NA
+AddHealth$H1GH59A[AddHealth$H1GH59B == 98 | AddHealth$H1GH59B == 99] <- NA
+
+AH <- select(AddHealth, H1GH59A, H1GH59B)
+head(AH)
+AH <- mutate(AH, Height = H1GH59A*12 + H1GH59B)
+head(AH)
+summary(AH$Height)

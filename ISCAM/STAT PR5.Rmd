@@ -1,0 +1,127 @@
+---
+title: "STAT PR5"
+author:
+date: "September 22, 2015"
+output: html_document
+---
+
+###Investigation 1.9    
+
+**(a)** Identify the observational units and variable of interest in this study. Is this variable quantitative or categorical? If categorical, how many different outcomes are possible?   
+    
+Observational units: *284 children's selection*    
+Variable of interest: *Which treat is selected*   
+Variable type: *Categorical type*    
+Possible outcomes: *Candy or Toy*    
+
+**(b)** Define (in words) the parameter of interest in this study.   
+*The parameter of interest in this study is the probability that a toy is selected.*
+
+**(c)** State an appropriate null and alternative hypothesis involving this parameter (in symbols and in words), for testing whether there is strong evidence of a preference for either the toys and the candy.  
+*$H_o$: Children who pick a toy*   
+*Null hypothesis symbol: $\pi$ = $\frac{1}{2}$ = 0.5*    
+*$H_a$: Children who did not pick a toy*    
+*Alternative hypothesis symbol: $\pi \neq$ 0.5*   
+
+**(d)** In the sample of 284 children, 135 children chose the toy and 149 chose the candy. Calculate the value of a relevant statistic in this study.   
+```{r}
+#Calculate the proportion
+p_hat <-135/284
+```
+*$\hat{p}$ = $\frac{135}{284} \approx$ `r p_hat`*    
+
+ 
+**(e)** Is the sample size large enough for the conditions of the Central Limit Theorem to be met? Justify your answer with appropriate calculation(s).    
+*n$\pi$: 284(.5) = 142 $\geq$ 10*    
+*n(1-$\pi$): 284(.5) = 142 $\geq$ 10*   
+*Since both n$\pi$ and n(1-$\pi$) are larger or equal to 10, the sample size is large enough to meet the conditions of the Central Limit Theorem.*   
+
+**(f)** According to the Central Limit Theorem, in the considering the distribution of sample proportions    
+-What is the shape of the null distribution here?    
+*The shape of the null distribution here is normal, because the sample size was large enough.*
+
+-What is the mean of this distribution?    
+*The mean of this distribution is 0.5.*   
+
+-What is the standard deviation of this distribution?    
+```{r}
+#calculate the standard deviation
+sd <-sqrt((.5*.5)/284)
+```
+*The standard deviative of this distribution is `r sd`*    
+
+*-Create a well-labeled sketch of the distribution under the null hypothesis; shade the region(s) of interest to represent the two-sided.*   
+```{r}
+#graph the distribution
+curve(dnorm(x, 0.5, sqrt((.5*.5)/284)), 0.35, 0.65, ylab = "", xlab = "")
+x.region <-seq(from = 0.5246, to = 0.75, length.out = 100)
+y.region <- dnorm(x.region, 0.5, sqrt((.5*.5)/284))
+x2.region <-seq(from = 0.35, to = 0.475, length.out = 100)
+y2.region <- dnorm(x2.region, 0.5, sqrt((.5*.5)/284))
+region.x <-c(x.region[1], x.region, x.region[100])
+region.y <-c(0, y.region, 0)
+region.x2 <-c(x2.region[1], x2.region, x2.region[100])
+region.y2 <-c(0, y2.region, 0)
+#shade the region(s) of interest to represent the two-sided
+polygon(region.x, region.y, col = "purple")
+polygon(region.x2, region.y2, col = "purple")
+abline(h = 0, lwd = 2)
+```
+
+
+*(g)* Calculate the z-score for the observed sample proportion to the probability hypothesized by the null hypothesis.    
+```{r}
+#Calculate the z-score
+zScore <-(p_hat-0.5)/sd
+```
+*The z-score for the observed sample proportion to the probability hypothesized by the null hypothesis is `r zScore`.*
+
+**(n)** Does this mean the researchers can conclude that they have proven that children do not have a preference between candy and toys? Explain.   
+```{r}
+#Find the p-value to see  if it is significant enough 
+pvalue <-dbinom(135, 284, 0.5)
+pv <-dbinom(0:284, 284, 0.5)
+actualPV<-sum(pv[pv<=pvalue])
+actualPV
+```
+**No, we fail to reject the null hypothesis, because the p-value, `r actualPV`, is greater than 0.05. Thus, there is no evidence against the null hypothesis, which means there is no evidence to prove or disprove that the children do not have a preference between candy and toys.**
+
+
+**(o)** Use technology to determine the exact binomial p-value. How does it compare to the normal approximation in this case?   
+
+```{r} 
+#calculate the exact binomial p-value
+pb <-dbinom(135, 284, 0.5)
+px <-dbinom(0:284,284,0.5)
+expV <-sum(px[px<=pb])
+```
+
+```{r}
+#calculate the normal approximation
+napprox <-2*pnorm(135/284, 0.5, sd)
+```
+*The exact binomial p-value is `r expV`, and the normal approximation is `r napprox`.* 
+*The two values are overall the very similiar but the exact binomial p-value does seem to be a bit larger than the normal approximation.*
+
+**(p)** In order to calculate P(X $\leq$ 135), what probability does the continuity correction tell us to calculate?    
+*The probability the continuity correction tells us to calculate is P(X $\leq$ k + 0.5). Moreover, we will also calculate P(X $\leq$ 135.5).*
+
+
+**(q)** In order to calculate P(X $\geq$ 149), what probability does the continuity correction tell us to calculate? [*Hint*: Remember what the continuity correction is trying to accomplish.]    
+*The probability the continutiy correction tells us to calculate is P(X $\geq$ k - 0.5). Moreover, we will also calculate P(X $\geq$ 148.5).*
+
+**(r)** Use technology (e.g., Normal Probability Calculator applet) to re-approximate the p-value using the normal probability distribution with the continuity correction. How does this new approximation compare to the earlier one (without the continuity correction) and to the exact binomial p-value?    
+```{r}
+#calculate the normal approximation with the continuity correction
+cc <-2*pnorm(135.5/284, 0.5, sd)
+```
+*The new normal approximation with the continuity correction is `r cc`.* 
+*This value, `r cc`, is greater than the oringal normal approximation without the continuity correction, `r napprox`. The new normal approximation with the continuity correction and the exact binomial p-value values are very similiar. Technically, this new value is slighty greater than the exact binomial p-value, `r expV`.*
+
+###RR Chapter 6 Summary   
+*The author informs the reader about how the act of gathering data affects how reproducible the research will be in the beginning of the chapter. The author mentioned that organizing the gathered data at the beginning of the research process will contribute to reproducibility of one’s research. Then the author went on discussing and explaining the process of importing data sets stored locally and from the internet. Consequently, I have learned how to reproducibly gather from number of sources. It is definitely useful for me to be more aware of whenever I gather data to ensure that I provide, record the steps, and organize it carefully which helps to make my research more reproducible for future references. I am also really interested in learning more in-depth in tools to learn for web scraping that the author mentioned in the book such as HTML, Regular Expressions, amd Looping for future advanced automatic data gathering.*    
+
+###SessionInfo    
+```{r}
+sessionInfo()
+```

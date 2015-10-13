@@ -1,0 +1,261 @@
+---
+title: "Data Management Assignment"
+author: 
+date: "9/25/2015"
+output: html_document
+---
+
+##Purpose of this Study
+
+This study will examine students who participated in Wave I of a study with The National Longitudinal Study of Adolescent to Adult Health (AddHealth).  The goals of the analysis of data will be to:
+    1). determine the relationship between levels of parent involvement and the after-school activities a student participates in
+    2). determine the association, if at all, between the relationship between parental involvement and after school-activities with student achievement.
+    
+##Variables
+
+Variables from AddHealth that will be used include:  H1DA1 (frequency of completing household chores each week), H1DA2 (frequency of hobbies after school), H1DA5 (frequency of playing sports after school), H1ED11 and H1ED12 (grades from the last year in English and math, respectively), H1SE4 (student's self-efficacy regarding education), H1RM1 (how far the residential mother went in school), H1RM12 (how often the mother is at home when student gets home from school), H1RF1 (how far the residential father went in school), H1RF12 (how often the father is at home when the student gets home from school), H1WP17H (how often school grades are discussed with mother), H1WP17I (how often projects are worked on with mother), H1WP18H (how often school grades are discussed with father), H1WP18I (how often projects are worked on with father), H1EE1 (student's rating of how likely it is they will go to college), H1EE3 (whether or not student works for pay).
+
+##Data Management
+
+```{r}
+library(PDS)
+library(dplyr)
+```
+
+First, after the variables of interest have been identified, a new data frame is created which consists of these variables. These variables will be stored in the new data frame which is labeled NDF.  Then, variables are renamed and given more readable names.
+
+```{r}
+NDF <- AddHealth %>%
+  rename(ChoresFreq = H1DA1, HobbiesFreq = H1DA2, SportsFreq = H1DA5,EngGrade = H1ED11, MathGrade = H1ED12, SelfEffEdu = H1SE4, MomSchool = H1RM1, MomHome = H1RM12, DadSchool = H1RF1, DadHome = H1RF12, MomGrades = H1WP17H, MomProjects = H1WP17I, DadGrades = H1WP18H, DadProjects = H1WP18I, CollegeExpectations = H1EE2, StudentWork = H1EE3) %>%
+  select(ChoresFreq, HobbiesFreq, SportsFreq, EngGrade, MathGrade, SelfEffEdu, MomSchool, MomHome, DadSchool, DadHome, MomGrades, MomProjects, DadGrades, DadProjects, CollegeExpectations, StudentWork)
+head(NDF)
+```
+
+###Variables Related to Student Activities After School
+
+The first variables examined are the variables related to the students activities after school, such as chores, hobbies, and work.  First, the number of responses is pulled. Then, the factors are given readable names instead of being named with numbers. Then the variables are graphed with a basic barplot.
+
+```{r}
+library(ggplot2)
+xtabs(~ChoresFreq, data = NDF)
+NDF$ChoresFreq <- factor(NDF$ChoresFreq, labels = c("Not At All", "1 or 2 Times", "3 or 4 Times", "5 or more Times","Refused", "Don't Know"))[, drop = TRUE]
+xtabs(~ChoresFreq, data = NDF)
+ggplot(data = NDF, aes(x = ChoresFreq, fill = ChoresFreq)) + 
+  geom_bar() + 
+  labs(title = "How Many Times You Completed Chores in a Week", x = "Response to How Many Times Chores Were Done") +
+  theme_bw() +
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+  guides(fill = guide_legend(title = "How Often\nChores Completed\nIn a Week?"))
+```
+
+The graph of the frequency of the students completing chores in a week shows a skewed left distribution with several of the students completing chores 3 to 4 times a week or more and very few students never completing chores during the week.  There were a total of 8 students who refused to answer or selected do not know as their response.
+
+```{r}
+library(ggplot2)
+xtabs(~HobbiesFreq, data = NDF)
+NDF$HobbiesFreq <- factor(NDF$HobbiesFreq, labels = c("Not At All", "1 or 2 Times", "3 or 4 Times", "5 or more Times","Refused", "Don't Know"))[, drop = TRUE]
+xtabs(~HobbiesFreq, data = NDF)
+ggplot(data = NDF, aes(x = HobbiesFreq, fill = HobbiesFreq)) + 
+  geom_bar() + 
+  labs(title = "How Many Times You Do a Hobby in a Week", x = "Response to How Many Times Hobbies Were Done") +
+  theme_bw() +
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+  guides(fill = guide_legend(title = "How Often\nHobbies Are Done\nIn a Week"))
+```
+
+The graph of the frequency of how many times a week the students participate in a hobby had a very uniform distribution with about the same number of students selecting not at all, 3 to 4 times a week, or 5 or more times a week.  There was a majority with the 1 to 2 times a week, and then there were a few "refused" and "Don't Know" responses.
+
+```{r}
+library(ggplot2)
+xtabs(~SportsFreq, data = NDF)
+NDF$SportsFreq <- factor(NDF$SportsFreq, labels = c("Not At All", "1 or 2 Times", "3 or 4 Times", "5 or more Times","Refused", "Don't Know"))[, drop = TRUE]
+xtabs(~SportsFreq, data = NDF)
+ggplot(data = NDF, aes(x = SportsFreq, fill = SportsFreq)) + 
+  geom_bar() + 
+  labs(title = "How Many Times You Do You Play a Sport in a Week", x = "Response to How Many Times You Play a Sport in a Week") +
+  theme_bw() +
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+  guides(fill = guide_legend(title = "How Often\nSports Are Played\nIn a Week"))
+```
+
+With the frequency of how often the students play a sport in a week, each response with the exception of "refused" and "don't know" were chosen about the same nuber of times. Surprisingly, the the choice selected the most was "Not at All".
+
+```{r}
+library(ggplot2)
+xtabs(~StudentWork, data = NDF)
+NDF$StudentWork <- factor(NDF$StudentWork, labels = c("No", "Yes", "Refused", "Don't Know"))[, drop = TRUE]
+xtabs(~StudentWork, data = NDF)
+ggplot(data = NDF, aes(x = StudentWork, fill = StudentWork)) + 
+  geom_bar() + 
+  labs(title = "Do You Work for Pay?", x = "Student Response") +
+  theme_bw() +
+  guides(fill = guide_legend(title = "Student Responses\nTo Do You Work\nFor Pay"))
+```
+
+When asked if they worked for pay, a majority of the students said yes. It is interesting that a majority of the students have a job in addition to school.
+
+###Variables on Students' Self-Efficacy in Education
+
+The next set of variables examined are the variables related to the students' self-efficacy in regard to school.  First, the number of responses is pulled. Then, the factors are given readable names instead of being named with numbers. Then the variables are graphed with a basic barplot.
+
+```{r}
+library(ggplot2)
+xtabs(~SelfEffEdu, data = NDF)
+NDF$SelfEffEdu <- factor(NDF$SelfEffEdu, labels = c("Moderately Below Average", "Slightly Below Average", "About Average", "Slightly Above Average","Moderately Above Average", "Extremely Above Average", "Refused", "Don't Know"))[, drop = TRUE]
+xtabs(~SelfEffEdu, data = NDF)
+ggplot(data = NDF, aes(x = SelfEffEdu, fill = SelfEffEdu)) + 
+  geom_bar() + 
+  labs(title = "Intelligence Compared to Others Your Age", x = "View on Intelliegence Compared to Others Your Age") +
+  theme_bw() +
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+  guides(fill = guide_legend(title = "Intelligence Level\nCompared to Others\nYour Age"))
+```
+
+The distribution is almost evenly distributed with most of the responses falling in the middle. However, there is an overwhelming majority with the response of feeling "About Average" in regards to intelligence level compared to other's.
+
+```{r}
+library(ggplot2)
+xtabs(~CollegeExpectations, data = NDF)
+NDF$CollegeExpectations <- factor(NDF$CollegeExpectations, labels = c("1", "2", "3", "4","5", "Refused", "Don't Know"))[, drop = TRUE]
+xtabs(~CollegeExpectations, data = NDF)
+ggplot(data = NDF, aes(x = CollegeExpectations, fill = CollegeExpectations)) + 
+  geom_bar() + 
+  labs(title = "How Likely Are You to go to College?", x = "Student Rating of Likelihood of Attending College") +
+  theme_bw() +
+  guides(fill = guide_legend(title = "Student Rating \nof Likelihood of Attending\nCollege on Scale 1-5?"))
+```
+
+This distribution is skewed left with most of the responses being a 5 on a scale of 1-5, where 5 is most likely to go to college.
+
+###Variables Related to Student Grades
+
+The next set of variables examined are the variables related to the students' performance in school, such as English grades and math grades.  First, the number of responses is pulled. Then, the factors are given readable names instead of being named with numbers. Then the variables are graphed with a basic barplot.
+
+```{r}
+library(ggplot2)
+xtabs(~EngGrade, data = NDF)
+NDF$EngGrade <- factor(NDF$EngGrade, labels = c("A", "B", "C", "D or Lower","Class Not Taken", "Class Not Graded This Way", "Refused", "Legitimate Skip","Don't Know"))[, drop = TRUE]
+xtabs(~EngGrade, data = NDF)
+ggplot(data = NDF, aes(x = EngGrade, fill = EngGrade)) + 
+  geom_bar() + 
+  labs(title = "Your English Grade Last Year", x = "English Grade Last School Year") +
+  theme_bw() +
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+  guides(fill = guide_legend(title = "English Grade\nReceived Last\nSchool Year"))
+```
+
+The distribution is skewed right with a majority of the particpants receiving an A or B in English the previous year.
+
+```{r}
+library(ggplot2)
+xtabs(~MathGrade, data = NDF)
+NDF$MathGrade <- factor(NDF$MathGrade, labels = c("A", "B", "C", "D or Lower","Class Not Taken", "Class Not Graded This Way", "Refused", "Legitimate Skip","Don't Know"))[, drop = TRUE]
+xtabs(~MathGrade, data = NDF)
+ggplot(data = NDF, aes(x = MathGrade, fill = MathGrade)) + 
+  geom_bar() + 
+  labs(title = "Your Math Grade Last Year", x = "Math Grade Last School Year") +
+  theme_bw() +
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+  guides(fill = guide_legend(title = "Math Grade\nReceived Last\nSchool Year"))
+```
+
+Once again the distribution is skewed right with a large majority of the students earning an A or B. There are more students that earn a C though.
+
+###Variables Related to Parent Involvement
+
+```{r}
+library(ggplot2)
+xtabs(~MomHome, data = NDF)
+NDF$MomHome[NDF$MomHome == 99] <- NA
+xtabs(~MomHome, data = NDF)
+NDF$MomHome <- factor(NDF$MomHome, labels = c("Always", "Most of the Time", "Some of the Time", "Almost Never","Never", "Brings Me Home from School", "Refused", "Legitimate Skip", "Don't Know"))[, drop = TRUE]
+xtabs(~MomHome, data = NDF)
+summary(NDF$MomHome)
+ggplot(data = NDF, aes(x = MomHome, fill = MomHome)) + 
+  geom_bar() + 
+  labs(title = "How Often Mother is at Home When You Come Home", x = "Frequency Mother is Home When You Come Home") +
+  theme_bw() +
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+  guides(fill = guide_legend(title = "How Often Mother\nIs Home When\nYou Get Home"))
+```
+
+```{r}
+library(ggplot2)
+xtabs(~DadHome, data = NDF)
+NDF$DadHome[NDF$DadHome == 99] <- NA
+xtabs(~DadHome, data = NDF)
+NDF$DadHome <- factor(NDF$DadHome, labels = c("Always", "Most of the Time", "Some of the Time", "Almost Never","Never", "Brings Me Home from School", "Refused", "Legitimate Skip", "Don't Know"))[, drop = TRUE]
+xtabs(~DadHome, data = NDF)
+summary(NDF$DadHome)
+ggplot(data = NDF, aes(x = DadHome, fill = DadHome)) + 
+  geom_bar() + 
+  labs(title = "How Often Dad is at Home When You Come Home", x = "Frequency Dad is Home When You Come Home") +
+  theme_bw() +
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+  guides(fill = guide_legend(title = "How Often Dad\nIs Home When\nYou Get Home"))
+```
+
+```{r}
+library(ggplot2)
+xtabs(~MomGrades, data = NDF)
+NDF$MomGrades[NDF$MomGrades == 9] <- NA
+xtabs(~MomGrades, data = NDF)
+NDF$MomGrades <- factor(NDF$MomGrades, labels = c("No", "Yes", "Refused", "Legitimate Skip","Don't Know"))[, drop = TRUE]
+xtabs(~MomGrades, data = NDF)
+summary(NDF$MomGrades)
+ggplot(data = NDF, aes(x = MomGrades, fill = MomGrades)) + 
+  geom_bar() + 
+  labs(title = "Talked About School Work or Grades With Your Mom?", x = "Response to Whether or Not Grades Were Discussed With Mother") +
+  theme_bw() +
+  guides(fill = guide_legend(title = "Talked About\nSchool Work or Grades\nWith Mom?"))
+```
+
+```{r}
+library(ggplot2)
+xtabs(~MomProjects, data = NDF)
+NDF$MomProjects[NDF$MomProjects == 9] <- NA
+xtabs(~MomProjects, data = NDF)
+NDF$MomProjects <- factor(NDF$MomProjects, labels = c("No", "Yes", "Refused", "Legitimate Skip","Don't Know"))[, drop = TRUE]
+xtabs(~MomProjects, data = NDF)
+summary(NDF$MomProjects)
+ggplot(data = NDF, aes(x = MomProjects, fill = MomProjects)) + 
+  geom_bar() + 
+  labs(title = "Worked on a Project With Your Mom?", x = "Response to Whether or Worked on a Project With Mother") +
+  theme_bw() +
+  guides(fill = guide_legend(title = "Worked on \nSchool Project\nWith Mom?"))
+```
+
+```{r}
+library(ggplot2)
+xtabs(~DadGrades, data = NDF)
+NDF$DadGrades[NDF$DadGrades == 9] <- NA
+xtabs(~DadGrades, data = NDF)
+NDF$DadGrades <- factor(NDF$DadGrades, labels = c("No", "Yes", "Refused", "Legitimate Skip","Don't Know"))[, drop = TRUE]
+xtabs(~DadGrades, data = NDF)
+summary(NDF$DadGrades)
+ggplot(data = NDF, aes(x = DadGrades, fill = DadGrades)) + 
+  geom_bar() + 
+  labs(title = "Talked About School Work or Grades With Your Dad?", x = "Response to Whether or Not Grades Were Discussed With Father") +
+  theme_bw() +
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+  guides(fill = guide_legend(title = "Talked About\nSchool Work or Grades\nWith Dad?"))
+```
+
+```{r}
+library(ggplot2)
+xtabs(~DadProjects, data = NDF)
+NDF$DadProjects[NDF$DadProjects == 9] <- NA
+xtabs(~DadProjects, data = NDF)
+NDF$DadProjects <- factor(NDF$DadProjects, labels = c("No", "Yes", "Refused", "Legitimate Skip","Don't Know"))[, drop = TRUE]
+xtabs(~DadProjects, data = NDF)
+summary(NDF$DadProjects)
+ggplot(data = NDF, aes(x = DadProjects, fill = DadProjects)) + 
+  geom_bar() + 
+  labs(title = "Worked on a Project With Your Dad?", x = "Response to Whether or Worked on a Project With Father") +
+  theme_bw() +
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+  guides(fill = guide_legend(title = "Worked on \nSchool Project\nWith Dad?"))
+```
+
+
+
