@@ -549,32 +549,38 @@ summary(DF)</code></pre>
  3rd Qu.: 8.00   4      : 139         
  Max.   :19.00   5      :  48         
                  (Other):  61         </code></pre>
-<pre class="r"><code>NDF3$PhysicalAbuseAttempts &lt;- factor(ifelse(NDF3$PhysicalAbuseAttempts %in% c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;), &quot;1&quot;, &quot;0&quot;))
-NDF3$HappinessLevel &lt;- factor(ifelse(NDF3$HappinessLevel %in% c(&quot;2&quot;, &quot;3&quot;), &quot;1&quot;, &quot;0&quot;))
-NDF4$HappinessLevel &lt;- factor(ifelse(NDF4$HappinessLevel %in% c(&quot;2&quot;, &quot;3&quot;), &quot;1&quot;, &quot;0&quot;))
+<pre class="r"><code>NDF3$PhysicalAbuseAttempts &lt;- factor(ifelse(NDF3$PhysicalAbuseAttempts %in% c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;), &quot;Yes&quot;, &quot;No&quot;))
+NDF3$HappinessLevel &lt;- factor(ifelse(NDF3$HappinessLevel %in% c(&quot;2&quot;, &quot;3&quot;), &quot;No&quot;, &quot;Yes&quot;))
+NDF4$HappinessLevel &lt;- factor(ifelse(NDF4$HappinessLevel %in% c(&quot;2&quot;, &quot;3&quot;), &quot;No&quot;, &quot;Yes&quot;))
 T1 &lt;- xtabs(~HappinessLevel + PhysicalAbuseAttempts, data = NDF3)
 T1</code></pre>
 <pre><code>              PhysicalAbuseAttempts
-HappinessLevel    0    1
-             0 4651  616
-             1  809  428</code></pre>
+HappinessLevel   No  Yes
+           No   809  428
+           Yes 4651  616</code></pre>
 <p><em><span class="math">\(H_o\)</span>: There is no relationship between happiness level and physical abuse attempts frequency in the relationship.</em><br /><em><span class="math">\(H_a\)</span>: There is a relationship between happiness level and physical abuse attempts frequency in the relationship</em></p>
 <p>If Happiness Level(HL) and Physical Abuse Attempts(PAA) are independent, then <em>P(HL &amp; PAA)=P(HL)×P(PAA)</em>. We use this rule for calculating expected counts, one cell at a time in T1:</p>
 <p><span class="math">\(Expected Count=\frac{Column Total×Row Total}{Table Total}\)</span></p>
 <pre class="r"><code>chisq.test(T1)$expected</code></pre>
 <pre><code>              PhysicalAbuseAttempts
-HappinessLevel        0       1
-             0 4421.559 845.441
-             1 1038.441 198.559</code></pre>
+HappinessLevel       No     Yes
+           No  1038.441 198.559
+           Yes 4421.559 845.441</code></pre>
 <pre class="r"><code>tab &lt;- prop.table(T1, 1)
 tab</code></pre>
 <pre><code>              PhysicalAbuseAttempts
-HappinessLevel         0         1
-             0 0.8830454 0.1169546
-             1 0.6540016 0.3459984</code></pre>
-<p>When examining the association between happiness level (categorical response) and physical abuse attempts frequency in the relationship (categorical explanatory), looking up at the table revealed among daily, young adults smokers (my sample), those were victims of physical abuses were more likely to have experienced being unhappy (11.6954623%) compared to those experiences of being victimed of physical abuses (34.5998383%).</p>
+HappinessLevel        No       Yes
+           No  0.6540016 0.3459984
+           Yes 0.8830454 0.1169546</code></pre>
+<p>When examining the association between happiness level (categorical response) and physical abuse attempts frequency in the relationship (categorical explanatory), looking up at the table revealed among daily, young adults smokers (my sample), those were victims of physical abuses were more likely to have experienced being unhappy (34.5998383%) compared to those experiences of being victimed of physical abuses (11.6954623%).</p>
 <p>We then test my observation through the Chi-Square Test.</p>
-<pre class="r"><code>ChiS1 &lt;- chisq.test(T1, correct = FALSE)</code></pre>
+<pre class="r"><code>ChiS1 &lt;- chisq.test(T1, correct = FALSE)
+ChiS1</code></pre>
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  T1
+X-squared = 389.99, df = 1, p-value &lt; 2.2e-16</code></pre>
 <p>From the Chi-Square test, we find that the p-value for this test is <span class="math">\(8.3042086\times 10^{-87}\)</span> which is extrememly small and definitely smaller than 0.01 which indicate that it is statistically significant. Therefore, we have a very strong evidence and we can reject the null hypothesis and accept the alternative hypothesis that there is a relationship between happiness level and physical abuse attempts frequency in the relationship.(<span class="math">\(\chi ^2 = 389.9934728, df = 1, p = 8.3042086\times 10^{-87} &lt; 0.01\)</span>)</p>
 <div id="post-hoc-test" class="section level4">
 <h4>Post-hoc Test</h4>
@@ -582,17 +588,17 @@ HappinessLevel         0         1
 T2</code></pre>
 <pre><code>              PhysicalAbuseAttempts
 HappinessLevel    0    1    2    3    4    5    6    7
-             0 3077  186  193  101   80   25   14   17
-             1  803  108  113   85   68   23   11   20</code></pre>
+           No   803  108  113   85   68   23   11   20
+           Yes 3077  186  193  101   80   25   14   17</code></pre>
 <pre class="r"><code>prop.table(T2, 1)</code></pre>
 <pre><code>              PhysicalAbuseAttempts
 HappinessLevel           0           1           2           3           4
-             0 0.833197942 0.050365556 0.052261034 0.027349039 0.021662605
-             1 0.652315191 0.087733550 0.091795288 0.069049553 0.055239643
+           No  0.652315191 0.087733550 0.091795288 0.069049553 0.055239643
+           Yes 0.833197942 0.050365556 0.052261034 0.027349039 0.021662605
               PhysicalAbuseAttempts
 HappinessLevel           5           6           7
-             0 0.006769564 0.003790956 0.004603304
-             1 0.018683997 0.008935825 0.016246954</code></pre>
+           No  0.018683997 0.008935825 0.016246954
+           Yes 0.006769564 0.003790956 0.004603304</code></pre>
 <pre class="r"><code>ChiS2 &lt;- chisq.test(T2, correct = FALSE)
 ChiS2</code></pre>
 <pre><code>
@@ -604,48 +610,6 @@ X-squared = 195.2, df = 7, p-value &lt; 2.2e-16</code></pre>
 <pre class="r"><code>n &lt;- choose(ncol(T2), nrow(T2))
 limit &lt;- 0.05/n</code></pre>
 <p>Now, there will be 28 post hoc tests comparing between columns of variable the physical abuse attempts frequency. The standard significant for gauging the smallness of a p-value is 0.05 but there are 28 individual test inside that big one so we have to divide it by 28. Therefore, the result of one of these test would be significant if the post hoc test has a p-value that is less than 0.0017857.</p>
-<pre class="r"><code>chisq.test(T2[, c(0, 2)], correct = FALSE)</code></pre>
-<pre><code>
-    Chi-squared test for given probabilities
-
-data:  T2[, c(0, 2)]
-X-squared = 20.694, df = 1, p-value = 5.389e-06</code></pre>
-<pre class="r"><code>chisq.test(T2[, c(0, 1)], correct = FALSE)</code></pre>
-<pre><code>
-    Chi-squared test for given probabilities
-
-data:  T2[, c(0, 1)]
-X-squared = 1332.8, df = 1, p-value &lt; 2.2e-16</code></pre>
-<pre class="r"><code>chisq.test(T2[, c(0, 3)], correct = FALSE)</code></pre>
-<pre><code>
-    Chi-squared test for given probabilities
-
-data:  T2[, c(0, 3)]
-X-squared = 20.915, df = 1, p-value = 4.801e-06</code></pre>
-<pre class="r"><code>chisq.test(T2[, c(0, 4)], correct = FALSE)</code></pre>
-<pre><code>
-    Chi-squared test for given probabilities
-
-data:  T2[, c(0, 4)]
-X-squared = 1.3763, df = 1, p-value = 0.2407</code></pre>
-<pre class="r"><code>chisq.test(T2[, c(0, 5)], correct = FALSE)</code></pre>
-<pre><code>
-    Chi-squared test for given probabilities
-
-data:  T2[, c(0, 5)]
-X-squared = 0.97297, df = 1, p-value = 0.3239</code></pre>
-<pre class="r"><code>chisq.test(T2[, c(0, 6)], correct = FALSE)</code></pre>
-<pre><code>
-    Chi-squared test for given probabilities
-
-data:  T2[, c(0, 6)]
-X-squared = 0.083333, df = 1, p-value = 0.7728</code></pre>
-<pre class="r"><code>chisq.test(T2[, c(0, 7)], correct = FALSE)</code></pre>
-<pre><code>
-    Chi-squared test for given probabilities
-
-data:  T2[, c(0, 7)]
-X-squared = 0.36, df = 1, p-value = 0.5485</code></pre>
 <pre class="r"><code>chisq.test(T2[, c(1, 2)], correct = FALSE)</code></pre>
 <pre><code>
     Pearson's Chi-squared test
@@ -682,6 +646,12 @@ X-squared = 21.156, df = 1, p-value = 4.235e-06</code></pre>
 
 data:  T2[, c(1, 7)]
 X-squared = 8.1759, df = 1, p-value = 0.004245</code></pre>
+<pre class="r"><code>chisq.test(T2[, c(1, 8)], correct = FALSE)</code></pre>
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  T2[, c(1, 8)]
+X-squared = 24.574, df = 1, p-value = 7.152e-07</code></pre>
 <pre class="r"><code>chisq.test(T2[, c(2, 3)], correct = FALSE)</code></pre>
 <pre><code>
     Pearson's Chi-squared test
@@ -712,6 +682,12 @@ X-squared = 2.1832, df = 1, p-value = 0.1395</code></pre>
 
 data:  T2[, c(2, 7)]
 X-squared = 0.52001, df = 1, p-value = 0.4708</code></pre>
+<pre class="r"><code>chisq.test(T2[, c(2, 8)], correct = FALSE)</code></pre>
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  T2[, c(2, 8)]
+X-squared = 4.1566, df = 1, p-value = 0.04147</code></pre>
 <pre class="r"><code>chisq.test(T2[, c(3, 4)], correct = FALSE)</code></pre>
 <pre><code>
     Pearson's Chi-squared test
@@ -736,6 +712,12 @@ X-squared = 2.1176, df = 1, p-value = 0.1456</code></pre>
 
 data:  T2[, c(3, 7)]
 X-squared = 0.49337, df = 1, p-value = 0.4824</code></pre>
+<pre class="r"><code>chisq.test(T2[, c(3, 8)], correct = FALSE)</code></pre>
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  T2[, c(3, 8)]
+X-squared = 4.0781, df = 1, p-value = 0.04344</code></pre>
 <pre class="r"><code>chisq.test(T2[, c(4, 5)], correct = FALSE)</code></pre>
 <pre><code>
     Pearson's Chi-squared test
@@ -754,6 +736,12 @@ X-squared = 0.075509, df = 1, p-value = 0.7835</code></pre>
 
 data:  T2[, c(4, 7)]
 X-squared = 0.025652, df = 1, p-value = 0.8728</code></pre>
+<pre class="r"><code>chisq.test(T2[, c(4, 8)], correct = FALSE)</code></pre>
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  T2[, c(4, 8)]
+X-squared = 0.86468, df = 1, p-value = 0.3524</code></pre>
 <pre class="r"><code>chisq.test(T2[, c(5, 6)], correct = FALSE)</code></pre>
 <pre><code>
     Pearson's Chi-squared test
@@ -766,21 +754,37 @@ X-squared = 0.056595, df = 1, p-value = 0.812</code></pre>
 
 data:  T2[, c(5, 7)]
 X-squared = 0.03264, df = 1, p-value = 0.8566</code></pre>
+<pre class="r"><code>chisq.test(T2[, c(5, 8)], correct = FALSE)</code></pre>
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  T2[, c(5, 8)]
+X-squared = 0.78022, df = 1, p-value = 0.3771</code></pre>
 <pre class="r"><code>chisq.test(T2[, c(6, 7)], correct = FALSE)</code></pre>
 <pre><code>
     Pearson's Chi-squared test
 
 data:  T2[, c(6, 7)]
 X-squared = 0.10134, df = 1, p-value = 0.7502</code></pre>
-<p>Post hoc comparisons of happiness level and physical abuse attempts frequency categories revealed that higher rates of nicotine dependence were seen among those smoking more cigarettes, up to 11 to 20 times in the last year of the relationship. After the above process, it was found that there were 8 significant results including:</p>
+<pre class="r"><code>chisq.test(T2[, c(6, 8)], correct = FALSE)</code></pre>
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  T2[, c(6, 8)]
+X-squared = 0.31486, df = 1, p-value = 0.5747</code></pre>
+<pre class="r"><code>chisq.test(T2[, c(7, 8)], correct = FALSE)</code></pre>
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  T2[, c(7, 8)]
+X-squared = 0.60324, df = 1, p-value = 0.4373</code></pre>
+<p>Post hoc comparisons of happiness level and physical abuse attempts frequency categories revealed that higher rates of unhappiness were seen among those being victimed of more physical abuse attempts frequency, up to 11 to 20 times in the last year of the relationship. After the above process, it was found that there were 7 significant results including:</p>
 <p>-“never” and “this has not happened in the past year, but it did happen before then” (Column 0 and 1)</p>
 <p>-“never” and “once in the last year of the relationship” (Column 0 and 2),</p>
 <p>-“never” and “twice in the last year of the relationship” (Column 0 and 3)</p>
-<p>-“this has not happened in the past year, but it did happen before then” and “once in the last year of the relationship” (Column 1 and 2)</p>
-<p>-“this has not happened in the past year, but it did happen before then” and “twice in the last year of the relationship” (Column 1 and 3)</p>
-<p>-“this has not happened in the past year, but it did happen before then” and “3 to 5 times in the last year of the relationship” (Column 1 and 4)</p>
-<p>-“this has not happened in the past year, but it did happen before then” and “6 to 10 times in the last year of the relationship” (Column 1 and 5)</p>
-<p>-“this has not happened in the past year, but it did happen before then” and “11 to 20 times in the last year of the relationship” (Column 1 and 6)</p>
+<p>-“never” and “3 to 5 times in the last year of the relationship” (Column 0 and 4)</p>
+<p>-“never” and “6 to 10 times in the last year of the relationship” (Column 0 and 5)</p>
+<p>-“never” and “more than 20 times in the last year of the relationship” (Column 0 and 7)</p>
 </div>
 </div>
 
