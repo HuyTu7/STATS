@@ -1,0 +1,165 @@
+---
+title: "Note1028"
+output: html_document
+---
+###Investigation 2.1: Birth Weights
+Investigation 2.1: Birth Weights parts a, b, g, h, j, k, m, and n; Investigation 2.2: How Long Can You Stand It parts a-k; RR chapters 11.
+(a) Are these data likely to be representative of birth weights for all 3,940,764 U.S. births in 2013? Explain.
+
+```{r}
+site <- "http://rossmanchance.com/iscam3/data/USbirthsJan2013.txt"
+BW <- read.table(site, header = TRUE, sep = "\t", na.strings = c(99, 9999))
+dim(BW)
+```
+
+(b) Is the variable birthweight quantitative or categorical?
+```{r}
+
+
+```
+
+
+(g) You may have noticed a few more lower weight babies than we might have expected (if we assume a “random” biological characteristic will be pretty symmetric and bell-shaped). Can you suggest an explanation for the excess of lower birth weights seen in this distribution?
+
+Babies not carried to full term tend to weigh less than those carried to full term
+```{r}
+tapply(BW$birthweight, BW$fullterm, summary, na.rm = TRUE)
+tapply(BW$birthweight, BW$fullterm, mean, na.rm = TRUE)
+```
+
+
+(h) Now, further subset the births2 data based on whether or not the pregnancy lasted at least 37 weeks (i.e., full_term = 1). Note: full_term values of 2 indicate missing values for this variable.
+[R Hints: use “==” for an equality comparison or be clever in your inequality. Attach and use length(birthweight) to count observations.]
+How many observations do you end up with?
+
+```{r}
+BW$fullterm[BW$fullterm == 2] <- NA
+tapply(BW$birthweight, BW$fullterm, summary, na.rm = TRUE)
+tapply(BW$birthweight, BW$fullterm, mean, na.rm = TRUE)
+
+```
+
+Yes you should never thought
+
+(i) After this step do we have a more symmetric distribution? What is a downside to subsetting the dataset in this way?
+
+
+
+(j) Calculate and interpret the mean and the standard deviation of these data.
+```{r}
+
+
+```
+
+(k) How would the mean and standard deviation compare if we had not removed the 9999 values?
+
+
+(m) Overlay a normal model on the distribution of birthweight data and comment on how well the model fits the data:
+```{r}
+
+
+```
+
+(n) Calculate the percentage of the birthweights that fall within 2 standard deviations of the mean by creating a Boolean (true/false) variable:
+```{r}
+
+
+```
+
+
+###Investigation 2.2: How Long Can You Stand It 
+(a) How long do you think you would wait before you honked?
+```{r}
+
+
+```
+
+(b) The data can be found in honking.txt. Use technology to create a histogram and describe the behavior of the data – shape, center, spread, outliers (suggest an explanation?). Then overlay a normal probability model. Do these data behave like a normal distribution? If not, how do they deviate from normality? Also examine a normal probability plot and discuss how deviations from the line correspond to the normal name shape you are observing. [Hint: Were the observed response times/quantiles placed on the vertical or the horizontal axis?]
+```{r}
+
+
+```
+
+(c) Compare the mean and median weight times. Which is larger? Why is it larger?
+```{r}
+
+
+```
+
+(d) Use technology to compute the interquartile range (Hint: Run the descriptive statistics command and report the lower and upper quartiles and then subtract). Write a one-sentence interpretation of this value. Would you consider it a resistant measure of spread? Explain.
+```{r}
+
+
+```
+
+(e) Create by hand a boxplot for these data. Which display do you prefer, the boxplot or the histogram? Why?
+```{r}
+
+
+```
+
+(f) Use the following Technology Detour to create a “modified” boxplot for these data. Are there any outliers?
+```{r}
+
+
+```
+
+(g) Create a new variable which is log(responsetime). (You can use either natural log or log base 10, but so we all do the same thing, let’s use natural log here, which is the default in most software when you say “log.”)
+```{r}
+
+
+```
+
+Create a histogram of these data and a normal probability plot. Does log(responsetime) approximately follow a normal distribution? What are the mean and standard deviation of this distribution?
+```{r}
+
+
+```
+
+
+(h) Use a normal distribution with mean 1.29 ln-sec and standard deviation 0.53 ln-seconds for the logged response times and predict how often someone will honk within the first 2 seconds. (Hint: What are you going to use for the observation of interest?)
+```{r}
+
+
+```
+
+
+(i) How does this prediction in (h) compare to the observed percentage honking within the first 2 seconds in the data set?
+```{r}
+
+
+```
+Another approach is to fit a different mathematical model to the original data:
+```{r}
+
+
+```
+
+
+
+(j) Use technology to overlay an exponential probability model (often used to model wait times) to these data and/or create a probability plot using the exponential distribution as the reference distribution.
+```{r}
+
+
+```
+
+Describe the behavior of the exponential distribution. Does it appear to be a reasonable fit for these data? Describe any deviations.
+
+
+
+(k) Use technology to calculate the probability of a wait time under 2 seconds using the exponential distribution with mean 4.25 sec
+```{r}
+
+
+```
+How does it compare to your estimate in (h) and the result in (i)?
+```{r}
+
+
+```
+
+###SUMMARY
+
+```{r}
+sessionInfo()
+```
