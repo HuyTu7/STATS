@@ -1,164 +1,247 @@
 ---
-title: "Note1028"
+title: "STAT PR8"
 output: html_document
 ---
 ###Investigation 2.1: Birth Weights
-Investigation 2.1: Birth Weights parts a, b, g, h, j, k, m, and n; Investigation 2.2: How Long Can You Stand It parts a-k; RR chapters 11.
-(a) Are these data likely to be representative of birth weights for all 3,940,764 U.S. births in 2013? Explain.
 
 ```{r}
+library(ggplot2)
 site <- "http://rossmanchance.com/iscam3/data/USbirthsJan2013.txt"
 BW <- read.table(site, header = TRUE, sep = "\t", na.strings = c(99, 9999))
 dim(BW)
+
+ggplot(BW, aes(x = birthweight)) + 
+  geom_density()
 ```
+
+*Since the data are not uniformly distributed, these data are not likely to be representative of birth weights for all 3,940,764 U.S. births in 2013.*
 
 (b) Is the variable birthweight quantitative or categorical?
-```{r}
 
-
-```
-
+*The variable birthweight is quantitative*
 
 (g) You may have noticed a few more lower weight babies than we might have expected (if we assume a “random” biological characteristic will be pretty symmetric and bell-shaped). Can you suggest an explanation for the excess of lower birth weights seen in this distribution?
 
-Babies not carried to full term tend to weigh less than those carried to full term
-```{r}
-tapply(BW$birthweight, BW$fullterm, summary, na.rm = TRUE)
-tapply(BW$birthweight, BW$fullterm, mean, na.rm = TRUE)
-```
+*Babies not carried to full term tend to weigh less than those carried to full term.*
 
 
 (h) Now, further subset the births2 data based on whether or not the pregnancy lasted at least 37 weeks (i.e., full_term = 1). Note: full_term values of 2 indicate missing values for this variable.
-[R Hints: use “==” for an equality comparison or be clever in your inequality. Attach and use length(birthweight) to count observations.]
 How many observations do you end up with?
 
 ```{r}
+summary(BW$fullterm)
 BW$fullterm[BW$fullterm == 2] <- NA
-tapply(BW$birthweight, BW$fullterm, summary, na.rm = TRUE)
-tapply(BW$birthweight, BW$fullterm, mean, na.rm = TRUE)
+summary(BW$fullterm)
 
+obs <- length(BW$fullterm) - summary(BW$fullterm)[7]
+obs
 ```
-
-Yes you should never thought
-
-(i) After this step do we have a more symmetric distribution? What is a downside to subsetting the dataset in this way?
-
-
+*There are $`r obs`$ observations that are not missing data.*
 
 (j) Calculate and interpret the mean and the standard deviation of these data.
 ```{r}
-
-
+BW_SD <- tapply(BW$birthweight, BW$fullterm, sd, na.rm = TRUE)
+BW_M <- tapply(BW$birthweight, BW$fullterm, mean, na.rm = TRUE)
+BW_SD
+BW_M
 ```
+
+*The mean and standard deviation of babies not born full-term values are `r BW_M[1]` and `r BW_SD[1]` respectively. Moreover, the mean and standard deviation of babies born full term are BW_M[2]` and `r BW_SD[2]` respectively*
 
 (k) How would the mean and standard deviation compare if we had not removed the 9999 values?
+```{r}
+BW2 <- read.table(site, header = TRUE, sep = "\t", na.strings =c(99))
+BW2$fullterm[BW2$fullterm == 2] <- NA
+BW2_SD <- tapply(BW2$birthweight, BW2$fullterm, sd, na.rm = TRUE)
+BW2_M <- tapply(BW2$birthweight, BW2$fullterm, mean, na.rm = TRUE)
+BW2_SD 
+BW2_M
+```
 
+*The mean and standard deviation of babies not born full-term values without having the 9999 values removed are `r BW_M[1]` and `r BW_SD[1]` respectively Yet, the mean and standard deviation of babies not born full-term values with the 9999 values removed are `r BW2_M[1]` and `r BW2_M[1]` respectively. Moreover, the mean and standard deviation of babies born full-term without having the 9999 values removed are BW_M[2]` and `r BW_SD[2]` respectively. However, the mean and standard deviation of babies born full term with the 9999 values removedare BW2_M[2]` and `r BW2_SD[2]` respectively.*
+
+*The mean and standard deviation would be larger respectively according to the comparison listed above.*
 
 (m) Overlay a normal model on the distribution of birthweight data and comment on how well the model fits the data:
-```{r}
-
-
+```{r} 
+ggplot(BW,aes(x=birthweight)) +
+  geom_density(alpha = 0.1) +
+  theme_bw() +
+  stat_function(fun = dnorm, args = list(mean = BW_M[2], sd = BW_SD[2]), colour = "#298A08")
 ```
+
+*The normal model on the distribution of birthweight data fits the data really well. The center are very close to each other and the shape are very similar with the original data have a little bit wider spread than the normal model.*
 
 (n) Calculate the percentage of the birthweights that fall within 2 standard deviations of the mean by creating a Boolean (true/false) variable:
 ```{r}
-
-
+BW_Mean <- mean(BW$birthweight, na.rm = TRUE) 
+BW_SD <- sd(BW$birthweight, na.rm = TRUE)
+UpperB <- BW_Mean + 2*BW_SD
+UpperB
+LowerB <- BW_Mean - 2*BW_SD
+LowerB
+Prop <- mean((BW$birthweight > LowerB) & (BW$birthweight < UpperB), na.rm = TRUE) 
+Prop <- Prop*100
+Prop
 ```
 
+*The percentage of the birthweights that fall within 2 standard deviations of the mean is `r Prop`%.*
 
 ###Investigation 2.2: How Long Can You Stand It 
 (a) How long do you think you would wait before you honked?
+
+*7 seconds*
+
+(b) The data can be found in honking.txt. Use technology to create a histogram and describe the behavior of the data – shape, center, spread, outliers (suggest an explanation?). Then overlay a normal probability model. Do these data behave like a normal distribution?
+
+
+If not, how do they deviate from normality? Also examine a normal probability plot and discuss how deviations from the line correspond to the normal name shape you are observing. [Hint: Were the observed response times/quantiles placed on the vertical or the horizontal axis?]
 ```{r}
-
-
+site <- "http://www.rossmanchance.com/iscam2/data/honking.txt"
+RT <- read.table(site, header  = TRUE)
+str(RT)
 ```
 
-(b) The data can be found in honking.txt. Use technology to create a histogram and describe the behavior of the data – shape, center, spread, outliers (suggest an explanation?). Then overlay a normal probability model. Do these data behave like a normal distribution? If not, how do they deviate from normality? Also examine a normal probability plot and discuss how deviations from the line correspond to the normal name shape you are observing. [Hint: Were the observed response times/quantiles placed on the vertical or the horizontal axis?]
 ```{r}
-
-
+fivenum(RT$responsetime)
+ME_RT <- mean(RT$responsetime)
+SD_RT <- sd(RT$responsetime)
+ggplot(data = RT, aes(x = responsetime)) +
+  geom_histogram(binwidth = 0.5, fill = "light blue", colour = "black") +
+  theme_bw() +  
+  labs(x = "Response Time in Second") +
+  expand_limits(x = -5)
 ```
+
+*These data do not behave like a normal distribution. The shape is seemingly unimodal with more skewed to the right. The median or the center of the graph is `r fivenum(RT$responsetime)[3]` appropriate. The middle 50% of the response time data of this field study is between `r fivenum(RT$responsetime)[2]` and `r fivenum(RT$responsetime)[4]`. From the graph above, one can see that there are around 4 outliers that are not together with other data points.* 
+
+```{r}
+ggplot(RT,aes(x=responsetime)) +
+  geom_density(fill = "yellow", colours= "red") +
+  theme_bw() +
+  stat_function(fun = dnorm, args = list(mean = ME_RT, sd = SD_RT), colour = "black") +
+  expand_limits(x = -15)
+
+ggplot(data = RT, aes(sample =responsetime)) +
+  stat_qq() +
+  theme_bw()
+```
+
+*Visually, the normal probability plot has a larger center along with a wider spread than the normal name shape that we are observing*
 
 (c) Compare the mean and median weight times. Which is larger? Why is it larger?
 ```{r}
-
-
+Mean <- mean(RT$responsetime)
+Mean
+Med <- median(RT$responsetime)
+Med
 ```
+*The mean is larger because the data is skewed to the right.*
 
 (d) Use technology to compute the interquartile range (Hint: Run the descriptive statistics command and report the lower and upper quartiles and then subtract). Write a one-sentence interpretation of this value. Would you consider it a resistant measure of spread? Explain.
 ```{r}
-
-
+lowerQ <- fivenum(RT$responsetime)[2]
+lowerQ
+upperQ <- fivenum(RT$responsetime)[4]
+upperQ
+IQR_Spread <- upperQ - lowerQ
+IQR_Spread
 ```
+
+*Interquartile range of `r IQR_Spread` is the range of the interval containing the middle 50% of the response time data of this field study. I would consider it a resistant measure of spread since the spread is based on median which is more resistant to the extreme than the mean is.*
 
 (e) Create by hand a boxplot for these data. Which display do you prefer, the boxplot or the histogram? Why?
 ```{r}
-
-
+boxplot(RT$responsetime, col = "orange", horizontal = TRUE)
 ```
+
+*With boxplot graphs, all the modes in the data are hidden but they are shown in the histogram graphs. Therefore, I prefer the histogram graph more.* 
+
 
 (f) Use the following Technology Detour to create a “modified” boxplot for these data. Are there any outliers?
 ```{r}
-
-
+boxplot(RT$responsetime, col = "violet", horizontal = TRUE)
+outliers <- boxplot(RT$responsetime, col = "violet", horizontal = TRUE)$out
 ```
+
+*Yes, there are outliers and they are `r outliers[1]`, `r outliers[2]`, `r outliers[3]`, and `r outliers[4]`.*
 
 (g) Create a new variable which is log(responsetime). (You can use either natural log or log base 10, but so we all do the same thing, let’s use natural log here, which is the default in most software when you say “log.”)
 ```{r}
-
-
+logrt <- log(RT$responsetime)
+boxplot(logrt, col ="violet", horizontal = TRUE, xlab ="log(responsetime)")
 ```
 
 Create a histogram of these data and a normal probability plot. Does log(responsetime) approximately follow a normal distribution? What are the mean and standard deviation of this distribution?
 ```{r}
+ggplot(RT,aes(x=logrt)) +
+  geom_histogram(fill = "sky blue", colours= "red") +
+  theme_bw()
 
-
+qqnorm(logrt, xlab ="log(responsetime)")
+qqline(logrt)
+Mean_L_RT <- mean(logrt)
+Mean_L_RT
+SD_L_RT <- sd(logrt)
+SD_L_RT
 ```
-
+*The histogram plot is close to a normal distribuation. The mean and sd of the log of the response times are `r Mean_L_RT` and `r SD_L_RT` respectively.*
 
 (h) Use a normal distribution with mean 1.29 ln-sec and standard deviation 0.53 ln-seconds for the logged response times and predict how often someone will honk within the first 2 seconds. (Hint: What are you going to use for the observation of interest?)
 ```{r}
-
-
+PH <- pnorm(log(2), 1.29, 0.53)
+PH
+pnorm(log(2), Mean_L_RT, SD_L_RT)
 ```
+*The probability of someone honks within the first 2 seconds is `r PH`.*
 
 
 (i) How does this prediction in (h) compare to the observed percentage honking within the first 2 seconds in the data set?
 ```{r}
-
-
-```
-Another approach is to fit a different mathematical model to the original data:
-```{r}
-
-
+EH1 <- mean(RT$responsetime <= 2)
+EH2 <- mean(logrt <= log(2))
+c(EH1, EH2)
 ```
 
-
+*The actual fraction that honk winthin two seconds is `r EH1` which is slightly less than the estimated fraction using a log normal model of `r PH`*
 
 (j) Use technology to overlay an exponential probability model (often used to model wait times) to these data and/or create a probability plot using the exponential distribution as the reference distribution.
+
 ```{r}
+MErt <- mean(RT$responsetime)
 
-
+ggplot(data = RT, aes(x = responsetime)) + 
+  geom_density(fill = "Orange") +
+  theme_bw() +
+  stat_function(fun = dexp, args = list(rate = 1/MErt), color = "brown", size = 1.5)
 ```
 
 Describe the behavior of the exponential distribution. Does it appear to be a reasonable fit for these data? Describe any deviations.
 
+*The exponential distribution is an exponential decay distribution. It does not seem to be a reasonable fit for these data because it was mostly underestimating a lot of the data points.*
 
 
 (k) Use technology to calculate the probability of a wait time under 2 seconds using the exponential distribution with mean 4.25 sec
 ```{r}
-
-
+prop <- pexp(2, rate = 1/4.25)
 ```
+
 How does it compare to your estimate in (h) and the result in (i)?
-```{r}
 
+*The probability of a wait time under 2 seconds using the exponent distribuation with mean of 4.25 is `r prop` which is way larger than my estimate `r PH` in (h) and the result `r EH1` in (i)*
 
-```
 
 ###SUMMARY
+
+*In chapter 11, the author showed some neat and usefull techniques of using `knitr` to create LaTeX document as articles and slideshows the readers can include their reproducible researches. Specifically, the author exploring the basics of LaTeX intensively, bibliographies with BibTex, and presentation with LaTeX Beamer. I had learnt some basics of LaTeX in writing documents and slideshow beamer of LaTeX in the capstone class but it was useful for my memory to be refreshed and reinforced. Personally, it was surprising that R can create LaTeX document as articles or slideshows for me.*
+
+####Example:
+
+*Here is an example on including mathematical equation/function which I use the equation of standard deviation to demonstrate this technique.*
+
+\[
+\sigma = \sqrt{\frac{1}{N}\sum\limits_{i=1}^n (x_{i} - \mu)^2}
+\]
 
 ```{r}
 sessionInfo()
