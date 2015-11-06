@@ -1,0 +1,50 @@
+---
+title: "STAT PR 9"
+output: html_document
+---
+###Investigation 2.3: Readability of Cancer Pamphlets
+The following tables indicate the number of patients at each reading level and the number of pamphlets at each readability level:
+
+|Patient's reading level |    <3    |     3    |    4   |   5   |   6   |   7   |   8   |   9   |   10   |    11   |    12   |    >12   |
+|:------------------:|:-------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|
+|**Count** |    6   |   4   |   4   |   3   |   3   |   2    |    6   |   5   |   4   |   7   |   2   |   17    |
+
+|Pamphlet’s readability level |   6   |   7   |   8   |   9   |   10   |    11   |    12   |    13   |    14   |    15   |    16   |
+|:------------------:|:-------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|
+|**Count** |    3   |   3   |   8   |   4   |   1   |   1    |    4   |   2   |   1   |   2   |   1   |
+
+(a) How many of these patients had a 6th grade reading level?
+*3*
+
+
+(b) Explain why the form of the data does not allow you to calculate the mean reading skill of these cancer patients. 
+*There are "<3" and ">12" data points that are listed abstractly and not explicitly in numeric format so the data does not allow you to calculate the mean reading skill of these cancer patients* 
+
+
+(c) Determine median reading level for these patients. (Hint: Consider the counts, and remember there are 63 patients.)
+
+```{r}
+countPatient <-  c(6, 4, 4, 3, 3 ,2 ,6 ,5 ,4 , 7, 2, 17)
+sum(countPatient)/2
+```
+
+```{r}
+PatientRL <- c(rep(2, 6), rep (3,4 ), rep(4,4), rep(5,3), rep(6,3),  rep(7,2), rep(8,6) , rep(8,6), rep(9,5),  rep(10,4), rep(11,7), rep(12,2), rep(13,17))
+Med_PRL <- median(PatientRL)
+```
+*The median of these cancer patients readability level is `r Med_PRL`.*
+
+(d) Determine the median readability level of these pamphlets
+```{r}
+countPamphlet <- rep(6:16, times = c(3, 3, 8, 4, 1, 1, 4, 2,1 ,2, 1))
+Med_P <- median(countPamphlet)
+```
+*The median of readdability level of these pamphlets is `r Med_P`.*
+
+(e) How do these medians compare? Are the values fairly close?
+
+*The median reading level for these patients and the median readability level of these pamphlets are the same or equal.*
+
+(f) Does the closeness of these medians indicate the pamphlets are well matched to the patients’ reading levels? Explain. (Hint: You may want to perform some additional explorations of these data?) How would you respond to these researchers?
+
+*Yes. It seems the phamplets are appropriately matched to the patients' reading levels. Therefore, I would respond these researchers that the pamphlets containing information for cancer patients are written at a level that the cancer patients can comprehend.*
