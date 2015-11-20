@@ -1,0 +1,352 @@
+---
+title: "STAT_PR10"
+output: html_document
+---
+
+###Investigation 2.5: Healthy Body Temperatures
+
+**Question a.** Explain (in words, in context) what is meant by the following symbols as applied to this study: $n, \bar{x}, s$, $\mu$, $\sigma$. If you know a value, report it. Otherwise, define the symbol.
+
+$n$: the sample size of sample aged 18-40 years who volunteered in Shigella vaccine trials at the University of Maryland Center for Vaccine Development, Baltimore. 
+
+$\bar{x}$: the mean body temperature of the sample
+
+- $\bar{x} = 98.249^{\circ}F$
+
+$s$: the standard deviation of the sample
+
+- $s = 0.733$
+
+$\mu$: the mean body temperature of the population distribution of interest
+
+- $\mu = 98.6^{\circ}F$
+
+$\sigma$: the standard distribution of body temperature of the population distribution of interest
+
+
+
+ 
+**Question b.** Write a null hypothesis and an alternative hypothesis for testing Wunderlich’s axiom using appropriate symbols.
+
+*$H_o$: $\mu$  = 98.6*
+
+*$H_a$: $\mu$  $\neq$ 98.6*
+
+ 
+**Question c.** Suppose the axiom is correct and many different random samples of 13 adults are taken from a large normally distributed population with mean 98.6oF. What does the Central Limit Theorem tell you about the theoretical distribution of sample means? (Indicate any necessary information that is missing.)
+
+*$\bar{x}$ ~ $N(\mu_{\bar{x}}, \sigma_{\bar{x}})$*
+
+*If many different random samples of 13 adults are taken from a large normally distributed population then the distribution of the sample means would be approximately normal with a distribution calculated by $\frac{\sigma}{\sqrt(n)}$. In order to calculate the distribution of the sample means, \sigma has to be known.*
+ 
+**Question d.** Suggest a method for estimating the population standard deviation from the sample data.
+
+*One can calculate the standard error of the sample mean, denoted by SE(x), as an estimate of the standard deviation of x (the sample to sample variability in sample means from repeated random samples) calculated by substituting the sample standard deviation $s$ for the population standard deviation $\sigma$.*
+ 
+**Question e.** Calculate the value of the standard error of the sample mean body temperature for this study.
+
+```{r}
+s <- 0.733
+n <- 13
+
+SE <- s/sqrt(n)
+```
+*The standard error of the sample mean body temperature for this study is `r SE`.*
+ 
+**Question f.** Determine how many standard errors the sample mean (98.249) falls from the hypothesized value of 98.6.
+
+```{r}
+x_bar <- 98.249
+mu <- 98.6
+
+N_SE <- (x_bar-mu)/SE
+N_SE 
+```
+
+*`r abs(N_SE)` standard errors the sample mean (98.249) falls from the hypothesized value of 98.6.*
+ 
+**Question g.** Based on this calculation, would you consider the value of the sample mean (98.249$^{\circ}$) to be surprising, if the population mean were really equal to 98.6$^{\circ}$? Explain how you are deciding.
+
+*I would not consider the value of the sample mean(98.249) to be surprising if the population mean were really equal to 98.6 since it is only `r abs(N_SE)` standard errors the sample mean falls from the hypothesized value.* 
+ 
+**Question h.** Open the Sampling from a Finite Population applet and paste the hypothetical population body temperature data from the BodyTempPop.txt file. Does this appear to be a normally distributed population? What are the values of the population mean and the population standard deviation?
+ 
+```{r}
+library(ggplot2)
+site <- "http://rossmanchance.com/iscam2/data/BodyTempPop.txt"
+BT <- read.table(site, header = TRUE)
+
+MU <- mean(BT$bodytemp)
+SIGMA <- sqrt(sum((BT$bodytemp - MU)^2)/length(BT$bodytemp))
+
+ggplot(BT, aes(x = bodytemp)) + 
+  geom_density(fill = "yellow")
+```
+
+*The shape is symmetric, unimodal and this appears to be a normally distributed population. The value of the population mean and the population standard deviation are `r MU` and `r SIGMA`.*
+ 
+**Question i.** Use the applet to select 10,000 samples of 13 adults from this hypothetical population. Confirm that the behavior of the distribution of sample means is consistent with the Central Limit Theorem? [Hint: Discuss shape, center, and variability; compare predicted to simulated.]
+
+```{r}
+set.seed(123)
+sims <- 10000
+n <- 13
+xbar <- numeric(sims)
+for(i in 1:sims){ 
+  nd <- sample(BT$bodytemp, size = n, replace= TRUE)
+  xbar[i] <- mean(nd)
+}
+DF <- data.frame(xbar)
+ggplot(data = DF, aes(x = xbar)) +
+  geom_density(fill = "pink", alpha = 0.3, color = "red") + 
+  theme_bw()
+
+variability <- SIGMA/sqrt(n)
+Two_Stats <- c(mean(xbar),  sd(xbar))
+Two_Stats
+```
+
+*The shape is symmetric, unimodal behaving quite as a normal distribution. The estimated center and the variability of the distribution of the sample means are `r Two_Stats[1]` and  `r Two_Stats[2]`. The center or the mean of the population distribution stays the same as `r MU`. However, the standard deviation or the variability of the population distribution of population means is  $\frac{\sigma}{n} = \frac{`r SIGMA`}{`r n`} =$ `r variability`. Therefore, those characteristics from this distribution of the 10000 sample means are very similar to the population distribution.*
+
+**Question j.** Where does the observed sample mean of 98.249 fall in this sampling distribution? Does it appear to be a surprising value if the population mean equals 98.6$^{\circ}$?
+
+```{r}
+sample_M <- 98.249
+
+z1 <- (sample_M-98.6)/(SIGMA/sqrt(n))
+z1
+p_value <- pnorm(z1)
+```
+
+*The observed sample mean of 98.249 fall `r z1` standard deviation away from the sample mean in this sampling distribution. Since the test case usually within 2 standard deviation away from the sample mean. It does not appear to be a surprising value if the population mean equals 98.6.*
+
+
+**Question k.** In the applet, change the Statistic option (above the graph) to t-statistic, the name for the standardized sample mean using the standard error of the sample mean. Describe the shape of the distribution of these standardized statistics from your 10,000 random samples.
+
+```{r}
+set.seed(13)
+samples <- 10000
+size <- 13
+TS <- numeric(samples)
+for(i in 1:samples){
+  rs <- sample(BT$bodytemp, size = size, replace = TRUE)
+  TS[i] <- (mean(rs) - 98.6)/(sd(rs)/sqrt(size))
+}
+
+ggplot(data = data.frame(TS = TS), aes(x = TS)) + 
+  geom_density(fill = "light blue") +
+  stat_function(fun = dt, args = list(size -1), color = "green") +
+  theme_bw() +
+  labs(x = "")
+```
+
+*The shape is unimodal behaving quite as a normal distribution from the distribution of these standardized statistics my 10000 random samples.*
+
+**Question l.** Check the box to Overlay Normal Distribution; does this appear to be a reasonable fit? What p- value does this normal approximation produce? [Hint: Enter your answer to (f) as the observed result for the t-statistic and count beyond.]
+
+```{r}
+ggplot(data = data.frame(TS = TS), aes(x = TS)) + 
+  geom_density(fill = "light blue") +
+  stat_function(fun = dnorm, args = list(0,1), color = "red") +
+  theme_bw() +
+  labs(x = "")
+Prop <- 2*pnorm(N_SE)
+Prop
+```
+
+*I believe that the curve fits pretty well with the distribution of these standardized statistics my 10000 random samples. This appears to be a reasonable fit. P- value that this normal approximation produce is `r p_value`*
+ 
+**Question m.** Does the theory-based p-value from the normal distribution accurately predict how often we would simulated a standardized statistic at least as extreme (in either direction) as the observed value of -1.73? Does it over predict or underpredict? [Hint: How does the behavior of the distribution of the standardized statistics most differ from a normal model?]
+
+```{r}
+P_value <- mean(TS < N_SE)
+P_value*2
+Pt_value <- 2*pt(N_SE, 12)
+Pt_value
+```
+
+*It underpredicted comparing to the empirical one (`r Pt_value` < `r P_value`).*
+
+**Question n.** Check the Overlay t-distribution box. What is the main visual difference in the t-distribution model compared to the normal distribution model? Does this t-distribution appear to be a better model for the simulated sampling distribution? Is the theory-based p-value using the t-distribution closer to the empirical p-value than the theory-based p-value using the normal distribution?
+
+```{r}
+ggplot(data = data.frame(TS = TS), aes(x = TS)) + 
+  geom_density() +
+  stat_function(fun = dt, args = list(size -1), color = "green") +
+  stat_function(fun = dnorm, args = list(0,1), color = "red") +
+  theme_bw() +
+  labs(x = "")
+```
+
+*The main visual difference in the t-distribution model is that it has a larger spread the the normal distribution model. This t-distribution appear to be a better model because the normal model does reject the null hypothesis way more often than the t-distribution model. Therefore, the theory-based p-value using the t-distribution is closer to the empirical p-value than the theory-based p-value using the normal distribution.* 
+
+**Question o.** The actual body temperature study involved a sample of n = 130 adults. Use the applet to generate a sampling distribution of t-statistics for this sample size. Toggle between the normal and t probability distributions. Do you see much difference between them? What is the actual value of the observed t- statistic? Where does it fall in this distribution? What do you conclude about the null hypothesis?
+
+```{r}
+set.seed(123)
+samples <- 10000
+size <- 130
+TS <- numeric(samples)
+for(i in 1:samples){
+  rs <- sample(BT$bodytemp, size = size, replace = TRUE)
+  TS[i] <- (mean(rs) - 98.6)/(sd(rs)/sqrt(size))
+}
+ggplot(data = data.frame(TS = TS), aes(x = TS)) + 
+  geom_density(fill = "yellow") +
+  stat_function(fun = dt, args = list(size -1), color = "blue") +
+  stat_function(fun = dnorm, args = list(0,1), color = "red") +
+  theme_bw() +
+  labs(x = "")
+
+T_S <- (98.234 - 98.6)/(SIGMA/sqrt(size))
+T_S
+PV <- 2*pt(T_S, size-1)
+PV
+```
+
+*The actual value of the observed t- statistic is `r T_S`. It falls to the very left of this distribution that is out of even 98% confidence interval. Moreover, the p-value is $`r PV`$ way less than 0.01. Therefore, we can reject the null hypothesis that the human body temperature is normally at 98.6$^{\circ}$ F.*
+
+**Question p.** Turn to the Simulating Confidence Intervals applet. Change the Method to Means, but keep the population set to Normal and z with $\sigma$. Set the population mean to 98.6$^{\circ}$, the population standard deviation to 0.733, and the sample size to 13. Generate 1000 random samples from this population and examine the running total for the percentage of 95% confidence intervals that successfully capture the actual value of the population mean $\mu$. Is this “z with sigma” procedure behaving as it should? How are you deciding?
+
+$\bar{x} + or  - Z_{1-\frac{\alpha}{2}}*\frac{\sigma}{\sqrt{n}}$
+
+```{r}
+set.seed(123)
+samples <- 1000
+size <- 13
+CIC <- numeric(samples)
+for(i in 1:samples){
+  rs <- sample(BT$bodytemp, size = size, replace = TRUE)
+  CI <- mean(rs) +c(-1, 1)*qnorm(0.975)*.7333/sqrt(size)
+  CIC[i] <- (CI[1] < 98.6 & 98.6 < CI[2])
+}
+mean(CIC)
+```
+
+*It behaves as it should because on average the confident interval is 94.1% so quite close to 95%.*
+
+**Question q.** But more realistically, we don’t know $\sigma$ and will use s in calculating our confidence interval. Predict what will change about the resulting confidence intervals from different random samples. [Hint: Think of two main properties of confidence intervals.]
+
+*The coverage probability will likely to decrease.*
+ 
+**Question r.** Change the Method now to *z* with *s*. What percentage of these 1000 confidence intervals succeed in capturing the population mean of 98.6$^{\circ}$? Is this close to 95%? If not, is it larger or smaller?
+
+$\bar{x} + or  - Z_{1-\frac{\alpha}{2}}*\frac{s}{\sqrt{n}}$
+```{r}
+set.seed(123)
+samples <- 1000
+size <- 13
+CIC <- numeric(samples)
+for(i in 1:samples){
+  rs <- sample(BT$bodytemp, size = size, replace = TRUE)
+  CI <- mean(rs) +c(-1, 1)*qnorm(0.975)*sd(rs)/sqrt(size)
+  CIC[i] <- (CI[1] < 98.6 & 98.6 < CI[2])
+}
+mean(CIC)
+```
+
+*This method of z with s is not closer to 95% than the previous method with $\sigma$.*
+
+**Question s.** Repeat (r) with a sample size of n = 5.
+
+```{r}
+set.seed(987)
+samples <- 1000
+size <- 5
+CIC <- numeric(samples)
+for(i in 1:samples){
+  rs <- sample(BT$bodytemp, size = size, replace = TRUE)
+  CI <- mean(rs) +c(-1, 1)*qnorm(0.975)*.7333/sqrt(size)
+  CIC[i] <- (CI[1] < 98.6 & 98.6 < CI[2])
+}
+mean(CIC)
+```
+
+*This method of smaller sample size z with s is closer to 95% than the result from both (r).*
+ 
+**Question t.** Change the Method to t. How do the intervals visibly change? Is the coverage rate indeed closer to 95%?
+
+```{r}
+set.seed(987)
+samples <- 1000
+size <- 13
+CIC <- numeric(samples)
+for(i in 1:samples){
+  rs <- sample(BT$bodytemp, size = size, replace = TRUE)
+  CI <- mean(rs) +c(-1, 1)*qt(0.975,df=size-1)*sd(rs)/sqrt(size)
+  CIC[i] <- (CI[1] < 98.6 & 98.6 < CI[2])
+}
+mean(CIC)
+```
+
+*The coverage rate, `r mean(CIC)` is much closer to 95%.*
+
+**Question u.** Find the *t* value corresponding to a 95% confidence level and a sample size of *n = 5*. How does this critical value compare to the corresponding *z* value for 95% confidence?
+
+```{r}
+size <- 5
+z_value <- qnorm(0.975)
+t_value <- qt(0.975,df=size-1)
+```
+
+*The t value corresponding to a 95% confidence level and a sample size of n = 5 is `r t_value`. The corresponding z value for 95% confidence is `r z_value`.*
+ 
+**Question v.** Repeat (u) for the sample size of n = 13. How do the t-critical values compare for these different sample sizes? Is this what you expected? Explain.
+
+```{r}
+size <- 13
+z_value <- qnorm(0.975)
+t_value <- qt(0.975,df=size-1)
+```
+
+*The t value corresponding to a 95% confidence level and a sample size of n = 13 is `r t_value`. This is what I expected because the larger the sample size the closer the t-value to the z-value. The corresponding z value for 95% confidence is `r z_value`.*
+ 
+**Question w.** Repeat (v) for the sample size of n = 130. How does this value compare to the earlier *t* and *z* values?
+
+```{r}
+size <- 130
+z_value <- qnorm(0.975)
+t_value <- qt(0.975,df=size-1)
+```
+
+*The t value corresponding to a 95% confidence level and a sample size of n = 130 is `r t_value`. This t_value is the smallest in comparison to the previous two t-values. It is also closer to the z-value for the 95% confidence as well which is `r z_value`.*
+ 
+**Question x.** Use the critical value from (w) to calculate a 95% confidence interval for the mean body temperature of a healthy adult based on our sample($x = 98.249, s = 0.733$).Is this interval consistent with your conclusion about the null hypothesis in (o)? Explain.
+
+```{r}
+x_bar <- 98.249
+s <- 0.733
+CI <- x_bar +c(-1, 1)*qt(0.975,df=size-1)*s/sqrt(size)
+CI
+```
+
+*Since 98.6 is not included in our 95% confidence interval, it is consistent with my conclusion about the null hypothesis in (o) which is the null hypothesis.* 
+
+**Question y.** Verify your by-hand calculations with technology and summarize the conclusions you would draw from this study (both from the p-value and the confidence interval, including the population you are willing to generalize to). Also include interpretations, in context, of your p-value and your confidence level.
+
+*Since most of those results were gotten from Rstudio, we do not need to verify by technology. The p-value is $`r PV`$ which is way less than $\alpha = 0.05$, so I conclude to reject the null hypothesis that the normal human body temperature is not $98.6^{\circ}$F. The confidence interval is (`r CI[1]`, `r CI[2]`). If the same population is sampled on countless occassions and interval estimates are made on each occassoion, the resulting intervals would bracket the true population parameter(\mu) in approximately 95% of the times.*
+
+###Summary
+
+*In chapter 13, the author illustrates and guides the readers through the process of creating and preseting reproducible research on the web with Markdown through HTML. The author focused on `rmarkdown` as a medium to create documents in different formats with a simple implementation. I was not aware of thow one can customize the formatting of HTML document through CSS style sheet and markdown along with publishing a HTML slideshow with `rmarkdown`.I believe that these diverse options of interactive tools would be useful for me presenting my reproducible research.* 
+
+####Example:
+In this example, I illustrated different formatting such as headings, lists, italic and bold format. I also included how to create hyper-links.
+
+##Independent two-sample t-test:
+
+**Equal or unequal sample sizes, unequal variances**
+
+1. *T statistic*:
+
+- $t = \frac{\bar{x_1}-\bar{x_2}}{s_{\bar{x_1}-\bar{x_2}}}$
+
+2. *Degree of freedom*:
+
+- $df = \frac{(\frac{(s_1)^2}{n_1} + \frac{(s_2)^2}{n_2})^2}{\frac{(\frac{(s_1)^2}{n_1})^2}{n_1-1} + \frac{(\frac{(s_2)^2}{n_2})^2}{n_2-1}}$
+
+Source: [Student t-test](https://en.wikipedia.org/wiki/Student%27s_t-test)
+
+```{r}
+sessionInfo()
+```

@@ -1,0 +1,63 @@
+---
+title: "STAT_PR11"
+output: html_document
+---
+
+Investigation 2.6: Healthy Body Temperatures (cont.)
+
+Reconsider the research question of Investigation 2.5 where a “one-sample t-test” found convincing evidence with sample mean body temperature of x = 98.2490F and a sample standard deviation of s = 0.7330F against the hypothesis that 􏰂 = 98.6 in the population. In fact, we were 95% confident that 􏰂 actually fell between 98.122 and 98.376 degrees (so not all that far from 98.6).
+
+(a) So if you recorded a body temperature of 98.6$^\circ$ would you be convinced you were sick? What temperature values would you be concerned about?
+
+
+(b) Is it true that approximately 95% of the temperatures in the sample fall inside your confidence interval? What percentage does? Do you think 95% of the temperatures in the population fall within the confidence interval?
+
+
+Prediction Intervals 
+It is very important to keep in mind that the confidence interval reported above only makes statements about the population mean, not individual body temperatures. But what if we instead wanted an interval to estimate the body temperature of a single randomly selected healthy adult rather than the population mean body temperature?
+
+
+(c) Still using our same sample results, what one number would you use to predict a healthy body temperature? If you then considered the uncertainty (margin-of-error) in this estimate for predicting one person’s body temperature, would you expected this margin-of-error to be larger or smaller then for predicting the population mean body temperature? Explain.
+
+Estimate: 
+Margin-of-error: 
+Explain:
+
+
+To construct such a confidence interval (often called a “prediction interval” to indicate that it will predict an individual outcome rather than the population mean), we need to consider both the sample-to- sample variation in sample means as well as the individual-to-individual variation in body temperatures.
+
+
+(d) We will estimate this combined standard error of an individual value by *s$\sqrt(\frac{1+1}{n})$* . Using this formula, how will this compare to the standard error of the sample mean (larger or smaller)? Explain.
+
+
+(e) Calculate this value for the body temperature data.
+
+(f) Notice the critical value will be the same as in the previous investigation. Recall or determine the critical value with n = 130 and 95% confidence.
+
+
+(g) Using your answer to (f), calculate a 95% prediction interval for an individual healthy adult body temperature.
+
+
+(h) How do the center and width of this interval compare to the 95% confidence interval for the population mean body temperature found in the previous investigation?
+
+
+(i) Provide a one-sentence interpretation on the interval calculated in (g).
+
+
+(j) The JAMA article only reported the summary statistics and did not provide the individual temperature values. If you had access to the individual data values, what could you do to assess whether the normality assumption is reasonable?
+
+(k) Without access to the individual data values but considering the context (body temperatures of healthy adults), do you have any thoughts about how plausible it is that the population is normally distributed?
+
+
+Investigation 2.7: Water Oxygen Levels
+
+Scientists often monitor the “health” of water systems to determine the impact of different changes in the environment. For example, Riggs (2002) reports on a case study that monitored the dissolved oxygen downstream from a commercial hog operation. There had been problems at this site for several years (e.g., manure lagoon overflow), including several fish deaths in the previous three years just downstream of a large swale through which runoff from the hog facility had escaped. The state pollution control agency decided to closely monitor dissolved oxygen downstream of the swale for the next three years to determine whether the problem had been resolved. In particular, they wanted to see whether there was a tendency for the dissolved oxygen level in the river to be less than the 5.0 mg/l standard. Sampling was scheduled to commence in January of 2000 and run through December of 2002. The monitors took measurements at a single point in the river, approximately six tenths of a mile from the swale, once every 11 days.
+
+
+(c) Examine the data from the first year in WaterQuality.txt. Describe the shape, center, and variability of the distribution. In particular, how do the mean and median compare? Do these data appear to be well-modelled by a normal distribution?
+
+
+(d) State the null and alternative hypotheses for testing whether the long-run mean dissolved oxygen in this river is less than 5.0 mg/l (indicating too little oxygen in the water, causing problems in the aquatic community structure).
+
+
+(e) Is the one-sample t-test likely to be valid for these data? Explain why or why not.
