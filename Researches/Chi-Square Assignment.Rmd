@@ -249,7 +249,7 @@ ggplot(data = NDF2, aes(x = PhysicalAbuseAttempts, y = TimeSpent, fill = Physica
   geom_boxplot() +
   theme_bw() + 
   guides(fill = FALSE) + 
-  labs(x = "Satisfaction With Conflict", y = "Time Spent Together(in years)", title = "Satisfaction With Conflict Time Spent Together") +
+  labs(x = "Satisfaction With Conflict", y = "Time Spent Together(in years)", title = "Satisfaction By Conflict Time Spent Together") +
   theme(axis.text.x  = element_text(angle = 75, vjust = 0.5, size = 14))
 ```
 
@@ -260,7 +260,7 @@ ggplot(data = NDF2, aes(x = PhysicalAbuseAttempts, y = TimeSpent, fill = Physica
   geom_violin() +
   theme_bw() + 
   guides(fill = FALSE) + 
-  labs(x = "Satisfaction With Conflict", y = "Time Spent Together(in years)", title = "Satisfaction With Conflict Time Spent Together") +
+  labs(x = "Satisfaction With Conflict", y = "Time Spent Together(in years)", title = "Satisfaction By Conflict Time Spent Together") +
   theme(axis.text.x  = element_text(angle = 75, vjust = 0.5, size = 14))
 ```
 
@@ -316,6 +316,7 @@ There are five statistically significant results including:
 
 
 ###Chi-Square Test
+
 ```{r}
 NDF4 <- data.frame(NDF3$PhysicalAbuseAttempts, NDF3$HappinessLevel)
 NDF4 <- NDF4 %>%
@@ -365,6 +366,7 @@ A Chi Square test of independence revealed that among individuals that are in th
 ```{r}
 n <- choose(ncol(T2), nrow(T2))
 limit <- 0.05/n
+limit
 ```
 
 Now, there will be 28 post hoc tests comparing between columns of variable the physical abuse attempts frequency. The standard significant for gauging the smallness of a p-value is 0.05 but there are 28 individual test inside that big one so we have to divide it by 28. Therefore, the result of one of these test would be significant if the post hoc test has a p-value that is less than `r limit`.
