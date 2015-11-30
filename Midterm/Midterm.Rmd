@@ -179,7 +179,8 @@ N<-length(a$words)
 n<-81
 EW<-mean(stringi::stri_length(a$words))     #population mean
 EW
-T_WL <-table(stri_length(a$words)) 
+T_WL <-table(stri_length(a$words))
+T_WL
 T_Vectors <-as.numeric(names(T_WL)) 
 T_Prop <-T_WL/N                             # Theoretical Probability
 FPC<-(N-n)/(N-1)                            # Finite correction
@@ -193,6 +194,7 @@ EW2
 T_WL2<-table(DF$AvgLen) 
 T_Vectors2<-as.numeric(names(T_WL2)) 
 PT2<-T_WL2/length(DF$AvgLen)                # Theoretical Probability
+PT2
 FPC<-(N-n)/(N-1)                            # Finite correction
 SWA2<-sqrt(sum((T_Vectors2-EW2)^2*PT2)*FPC) # SD with correction
 SW2<-sqrt(sum((T_Vectors2-EW2)^2*PT2))      # SD without correction

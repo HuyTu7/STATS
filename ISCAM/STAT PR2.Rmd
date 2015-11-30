@@ -81,12 +81,11 @@ Pval1 <- 1-pbinom(7,10,.15)
       
 *The p-value calculates to 0.0000087, which means that out of 10 people the probability of 8 or more people dying is an extremely rare occurance.*   
       
-**(l)** Suppose that we had focused on survival for 30 days rather than death within 30 days as a "success" in this study. Describe how the hypotheses would change and how the calculation of the binomial p-value would change. Then go ahead and calculate the exact binomial p-value with this set-up. How does its value compare to your answer in (j)? How (if at all) does your conclusio change?    
+**(l)** Suppose that we had focused on survival for 30 days rather than death within 30 days as a "success" in this study. Describe how the hypotheses would change and how the calculation of the binomial p-value would change. Then go ahead and calculate the exact binomial p-value with this set-up. How does its value compare to your answer in (j)? How (if at all) does your conclusion change?    
     
 *Orginally, the null hypothesis was $H_{o}$: $\pi$= 0.15. In order to calculate the p-value, the probability of 8 or more deaths out of the 10 heart transplant patients was determined. The new null hypothesis is $H_{o}$: $\pi$= 0.85. In order to calculate the p-value, the probability of 2 or less survivors out of the 10 heart transplant patients was determined. The p-value calculation is below:*
 
 ```{r}
-#Create four different methods to compute the p-value.
 pbinom(2,10,.85)
 ```  
 

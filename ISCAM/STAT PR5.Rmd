@@ -92,7 +92,10 @@ actualPV
 ```{r} 
 #calculate the exact binomial p-value
 pb <-dbinom(135, 284, 0.5)
+pb
 px <-dbinom(0:284,284,0.5)
+px
+px[px<=pb]
 expV <-sum(px[px<=pb])
 ```
 

@@ -1,63 +1,162 @@
 ---
 title: "STAT_PR11"
 output: html_document
+date: "`r Sys.Date()`"
 ---
 
-Investigation 2.6: Healthy Body Temperatures (cont.)
+###Investigation 2.6: Healthy Body Temperatures (cont.)
 
-Reconsider the research question of Investigation 2.5 where a “one-sample t-test” found convincing evidence with sample mean body temperature of x = 98.2490F and a sample standard deviation of s = 0.7330F against the hypothesis that 􏰂 = 98.6 in the population. In fact, we were 95% confident that 􏰂 actually fell between 98.122 and 98.376 degrees (so not all that far from 98.6).
+Reconsider the research question of Investigation 2.5 where a “one-sample t-test” found convincing evidence with sample mean body temperature of $\bar{x} = 98.249^{\circ} F$ and a sample standard deviation of $s = 0.7330^{\circ} F$ against the hypothesis that $\mu = 98.6^{\circ}$ in the population. In fact, we were 95% confident that 􏰂$\mu$ actually fell between $98.12^{\circ}$ F and $98.376^{\circ}$ F (so not all that far from 98.6).
 
-(a) So if you recorded a body temperature of 98.6$^\circ$ would you be convinced you were sick? What temperature values would you be concerned about?
+**(a)** So if you recorded a body temperature of $98.6^{\circ}$ F would you be convinced you were sick? What temperature values would you be concerned about?
+
+*I would not be convinced that I were sick. I would be concerned if I recorded 100 degrees and above.*
+
+**(b)** Is it true that approximately 95% of the temperatures in the sample fall inside your confidence interval? What percentage does? Do you think 95% of the temperatures in the population fall within the confidence interval?
+
+```{r}
+library(ggplot2)
+set.seed(123)
+site <- "http://rossmanchance.com/iscam2/data/BodyTempPop.txt"
+BT <- read.table(site, header = TRUE)
+length(BT$bodytemp)
+
+size <- 130
+rs <- sample(BT$bodytemp, size = size, replace = TRUE)
+
+LowerB <- 98.122
+UpperB <- 98.376
+
+Prop <- mean((rs >= LowerB) & (rs <= UpperB))
+Prop <- Prop*100
+```
+
+*It is not true that approximately 95% of the temperatures in the sample fall inside your confidence interval. I tested by randomly sampling for one sample with size 130 from the population data and only `r Prop`% fall inside my confidence interval.  I strongly do not think that 95% of the temperatures in the population fall within the confidence interval since the 95% confidence interval measure the range that the researcher is confident 95% of the times the population mean would fall in and not the sample data.*
 
 
-(b) Is it true that approximately 95% of the temperatures in the sample fall inside your confidence interval? What percentage does? Do you think 95% of the temperatures in the population fall within the confidence interval?
-
-
-Prediction Intervals 
+***Prediction Intervals*** 
 It is very important to keep in mind that the confidence interval reported above only makes statements about the population mean, not individual body temperatures. But what if we instead wanted an interval to estimate the body temperature of a single randomly selected healthy adult rather than the population mean body temperature?
 
 
-(c) Still using our same sample results, what one number would you use to predict a healthy body temperature? If you then considered the uncertainty (margin-of-error) in this estimate for predicting one person’s body temperature, would you expected this margin-of-error to be larger or smaller then for predicting the population mean body temperature? Explain.
+**(c)**Still using our same sample results, what one number would you use to predict a healthy body temperature? If you then considered the uncertainty (margin-of-error) in this estimate for predicting one person’s body temperature, would you expected this margin-of-error to be larger or smaller then for predicting the population mean body temperature? Explain.
 
-Estimate: 
-Margin-of-error: 
-Explain:
+Estimate: *I would use the mean of the sample to predict a healthy body temperature*
 
+Margin-of-error: *would be larger then for predicting the population mean body temperature.* 
 
-To construct such a confidence interval (often called a “prediction interval” to indicate that it will predict an individual outcome rather than the population mean), we need to consider both the sample-to- sample variation in sample means as well as the individual-to-individual variation in body temperatures.
-
-
-(d) We will estimate this combined standard error of an individual value by *s$\sqrt(\frac{1+1}{n})$* . Using this formula, how will this compare to the standard error of the sample mean (larger or smaller)? Explain.
+Explain: *This margin-of-error is the prediction interval as an estimate for predicting one person's body temperature which we ned to consider both the sample-to- sample variation in sample means as well as the individual-to-individual variation in body temperatures. Therefore this estimate would be larger than for predicting mean body temperature.*
 
 
-(e) Calculate this value for the body temperature data.
-
-(f) Notice the critical value will be the same as in the previous investigation. Recall or determine the critical value with n = 130 and 95% confidence.
+To construct such a confidence interval (often called a “prediction interval” to indicate that it will predict an individual outcome rather than the population mean), we need to consider both the sample-to-sample variation in sample means as well as the individual-to-individual variation in body temperatures.
 
 
-(g) Using your answer to (f), calculate a 95% prediction interval for an individual healthy adult body temperature.
+**(d)** We will estimate this combined standard error of an individual value by *s$\sqrt(1+\frac{1}{n})$* . Using this formula, how will this compare to the standard error of the sample mean (larger or smaller)? Explain.
 
+*$1+\frac{1}{n}$ is very close to 1 as n gets bigger so $s\sqrt(1+\frac{1}{n})$ should be approximately close to s. However $s/\sqrt(n)$ even with $n = 4$, the result would be half of s and it would just getting smaller as n getting bigger.This combined standard error of an individual value should be bigger than the standard error of the sample mean.*
 
-(h) How do the center and width of this interval compare to the 95% confidence interval for the population mean body temperature found in the previous investigation?
+**(e)** Calculate this value for the body temperature data.
 
+```{r}
+s <- 0.733
+n <- 130
 
-(i) Provide a one-sentence interpretation on the interval calculated in (g).
+SE <- s/sqrt(n)
+SE
+CSE <- s*sqrt(1 + (1/n))
+CSE
+```
 
+*The combined standard error of an individual value is `r CSE`. It confirmed my answer from the previous question that this standard error is larger than the standard error of the sample mean (`r CSE` >  `r SE`).*
 
-(j) The JAMA article only reported the summary statistics and did not provide the individual temperature values. If you had access to the individual data values, what could you do to assess whether the normality assumption is reasonable?
+**(f)** Notice the critical value will be the same as in the previous investigation. Recall or determine the critical value with n = 130 and 95% confidence.
 
-(k) Without access to the individual data values but considering the context (body temperatures of healthy adults), do you have any thoughts about how plausible it is that the population is normally distributed?
+```{r}
+x_bar <- 98.249
+t_value <- qt(0.975,df=size-1)
+```
 
+*The critical value with n = 130 and 95% confidence is `r t_value`.*
 
-Investigation 2.7: Water Oxygen Levels
+**(g)** Using your answer to (f), calculate a 95% prediction interval for an individual healthy adult body temperature.
+
+```{r}
+PI <- x_bar +c(-1, 1)*t_value*CSE
+PI
+```
+
+*A 95% prediction interval for an individual healthy adult body temperature is from `r PI[1]` to `r PI[2]`.*
+
+**(h)** How do the center and width of this interval compare to the 95% confidence interval for the population mean body temperature found in the previous investigation?
+
+```{r}
+centerPI <- (PI[1]+PI[2])/2
+centerCI <- (LowerB + UpperB)/2
+widthCI <- UpperB - LowerB
+widthPI <- PI[2] - PI[1]
+```
+
+*The center of this predicion interval (centerCI =`r centerPI`) is the same as the center of the confidence interval for the population mean body temperature found in the previous investigation (centerCI =`r centerCI`). However, the width of this interval (widthPI = `r widthPI`) is more than ten times wider than the width of the confidence interval for the population mean body temperature found in the previous investigation (widthCI = `r widthCI`).*
+
+**(i)** Provide a one-sentence interpretation on the interval calculated in (g).
+
+*We are 95% confident that individual (future) observations of human body temperature will fall between `r PI[1]` and `r PI[2]`.*
+
+**(j)** The JAMA article only reported the summary statistics and did not provide the individual temperature values. If you had access to the individual data values, what could you do to assess whether the normality assumption is reasonable?
+
+*If I had access to the individual data values, I could graph all the data in the population while fitting the normal curve to the data. Moreover, I could also graph a normal qq plot to check if the data points appearing to fit on the line y=x to check if the normality assumption for the data is reasonable.*
+
+**(k)** Without access to the individual data values but considering the context (body temperatures of healthy adults), do you have any thoughts about how plausible it is that the population is normally distributed?
+
+*Without access to the individual data values, considering the context of the body temperatures of healthy adults, I think it is plausible that the population is normally distributed if all the data were recorded in the same conditions with a fair even number of both male and female participants since male body temperatures tend to be colder than female body temperature.*
+
+###Investigation 2.7: Water Oxygen Levels
 
 Scientists often monitor the “health” of water systems to determine the impact of different changes in the environment. For example, Riggs (2002) reports on a case study that monitored the dissolved oxygen downstream from a commercial hog operation. There had been problems at this site for several years (e.g., manure lagoon overflow), including several fish deaths in the previous three years just downstream of a large swale through which runoff from the hog facility had escaped. The state pollution control agency decided to closely monitor dissolved oxygen downstream of the swale for the next three years to determine whether the problem had been resolved. In particular, they wanted to see whether there was a tendency for the dissolved oxygen level in the river to be less than the 5.0 mg/l standard. Sampling was scheduled to commence in January of 2000 and run through December of 2002. The monitors took measurements at a single point in the river, approximately six tenths of a mile from the swale, once every 11 days.
 
 
-(c) Examine the data from the first year in WaterQuality.txt. Describe the shape, center, and variability of the distribution. In particular, how do the mean and median compare? Do these data appear to be well-modelled by a normal distribution?
+**(c)** Examine the data from the first year in WaterQuality.txt. Describe the shape, center, and variability of the distribution. In particular, how do the mean and median compare? Do these data appear to be well-modelled by a normal distribution?
+
+```{r}
+library(ggplot2)
+site <- "http://rossmanchance.com/iscam2/data/WaterQuality.txt"
+WQ <- read.table(site, skip = 1)
+summary(WQ$V3)
+ME <- mean(WQ$V3)
+SD <- sd(WQ$V3)
+MED <- median(WQ$V3)
+IntQR <- IQR(WQ$V3)
+ggplot(data = WQ, aes(x = V3)) +
+  geom_density(fill = "pink") + 
+  theme_bw() + 
+  labs(x = "Oxygen Level (mg/l)") + 
+  stat_function(fun = dnorm, args = list(mean = ME, sd = SD), colour = "#298A08")
+
+qqnorm(WQ$V3, xlab ="DISSOLVED OXYGEN (MG/L)")
+qqline(WQ$V3)
+```
+
+*The distribution of the data appears to be skewed right and unimodal, the center of the distribution is `r ME` and the variability is `r IntQR`. The mean of the distribution (`r ME`) is larger than the median of the distribution (`r MED`). This sample does not appear to be normal. However, the normal qq plot indicating that the data were likely to sampled from a normal data set. Therefore, this data can be well-modelled by a normal distribution.* 
+
+**(d)** State the null and alternative hypotheses for testing whether the long-run mean dissolved oxygen in this river is less than 5.0 mg/l (indicating too little oxygen in the water, causing problems in the aquatic community structure).
+
+*$H_o$: $\mu$  = 5*
+
+*$H_a$: $\mu$  < 5*
+
+**(e)** Is the one-sample t-test likely to be valid for these data? Explain why or why not.
+
+```{r}
+size <- length(WQ$V3)
+size
+```
+
+*After examining the qq plot, the distribution appears to be normal. Therefore, the one-sample t-test is likely to be valid for these data. Moreover, the sample size is `r size` (>30) fulfill the technical condition to perform one-sample t-test.*
+
+###Summary
+
+*Chapter 14 is the last chapter of the book, the author wanted to end the book by dicussing the five issues that have not gotten mentioned yet including citing reproducible research, licensing this research, sharing your code through R packages, to make your research files public or private, and enhance the future-proof quality of your research. Personally, I found the last three issues to be very useful and noteable. As a computer geek, I am fascinated about writing codes and develop functions. Moreover, being able put them together in the packages of that language such as R functions and share them is one plausible way to help other people to solve problems in their own work without duplicating the efforts. During the development of a project, the researchers need to consider if their project should be publicly or privately available based on case-by-case basis. For a small research field, research projects should be public to increase transparency and encourage feedback. Finally, as a future researcher, I worry about how my research can be future-proof to protect my research and the author introduced some possible steps to help my future researches as future-proof as possible such as documenting what software I used, using software that archives old versions, or encapsulating it in a virtual machine that is available on a cloud storage system.*   
 
 
-(d) State the null and alternative hypotheses for testing whether the long-run mean dissolved oxygen in this river is less than 5.0 mg/l (indicating too little oxygen in the water, causing problems in the aquatic community structure).
-
-
-(e) Is the one-sample t-test likely to be valid for these data? Explain why or why not.
+```{r}
+sessionInfo()
+```

@@ -46,7 +46,7 @@ BW_SD
 BW_M
 ```
 
-*The mean and standard deviation of babies not born full-term values are `r BW_M[1]` and `r BW_SD[1]` respectively. Moreover, the mean and standard deviation of babies born full term are BW_M[2]` and `r BW_SD[2]` respectively*
+*The mean and standard deviation of babies not born full-term values are `r BW_M[1]` and `r BW_SD[1]` respectively. Moreover, the mean and standard deviation of babies born full term are `r BW_M[2]` and `r BW_SD[2]` respectively*
 
 (k) How would the mean and standard deviation compare if we had not removed the 9999 values?
 ```{r}
@@ -58,7 +58,7 @@ BW2_SD
 BW2_M
 ```
 
-*The mean and standard deviation of babies not born full-term values without having the 9999 values removed are `r BW_M[1]` and `r BW_SD[1]` respectively Yet, the mean and standard deviation of babies not born full-term values with the 9999 values removed are `r BW2_M[1]` and `r BW2_M[1]` respectively. Moreover, the mean and standard deviation of babies born full-term without having the 9999 values removed are BW_M[2]` and `r BW_SD[2]` respectively. However, the mean and standard deviation of babies born full term with the 9999 values removedare BW2_M[2]` and `r BW2_SD[2]` respectively.*
+*The mean and standard deviation of babies not born full-term values without having the 9999 values removed are `r BW_M[1]` and `r BW_SD[1]` respectively Yet, the mean and standard deviation of babies not born full-term values with the 9999 values removed are `r BW2_M[1]` and `r BW2_M[1]` respectively. Moreover, the mean and standard deviation of babies born full-term without having the 9999 values removed are `r BW_M[2]` and `r BW_SD[2]` respectively. However, the mean and standard deviation of babies born full term with the 9999 values removedare `r BW2_M[2]` and `r BW2_SD[2]` respectively.*
 
 *The mean and standard deviation would be larger respectively according to the comparison listed above.*
 

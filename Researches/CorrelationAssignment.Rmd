@@ -448,7 +448,7 @@ ggplot(data = NDF, aes(x = PeopleMarried, y = TimeSpent)) +
   labs(x = "People that the individual subject married in the past", y = "Time Spent Together(in years)", title = "Correlation Graph") 
 ```
 
-My codebook has significantly more categorical variables than quantitative variables. The ones I found that are relavant to my research only produced 58 data points generated as a result which indicates a weak relationship. However, the scatterplot did suggest a relationship that is positive.
+My codebook has significantly more categorical variables than quantitative variables. The ones I found that are relavant to my research only produced 58 data points generated as a result which indicates a weak relationship. However, the scatterplot did suggest a relationship that is positive and close to a linear form.
 
 
 ```{r}
