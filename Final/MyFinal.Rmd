@@ -1,0 +1,37 @@
+---
+title: "My Final"
+output: html_document
+date: '`r Sys.Date()`'
+---
+
+**What materials will you include in your own course? Why did you find them helpful (be very specific and cite examples)?**
+
+*Given the opportunity to design and instruct my own STT 5811 course, I would definitely include materials such as the Passion Driven Statistics (PDS) book on rpubs, ISCAM assignments, and weekly research assignments.*
+
+*The PDS book was very useful in term of having technical examples pertaining to the weekly research assignments that our class had done over this past semester such as ANOVA, Univariate, Bivariate, Chi-Square, and Correlation. However, I do find the book's examples sometimes can be missing some technical coding for clearer and more appealing visual while the example files in the STT 2810 repository would be missing some explanation which is hard to understand those examples. Therefore, I had to look at the example on STT 2810 repository and the PDS simultaneously, which I think it would beneficial if those two are combined or integrated into one somehow.*
+
+*Even when I do find the ISCAM assignments are very helpful to my learning experience in class, I find those can be challenging to people who have not had any coding experiences before while enhancing their understanding of statistics at the same time. Therefore, I think that it would be nice to have more problems on ISCAM but half of them are required to be done in R and the other half can be done by hand, especially ISCAM 10 because that one was quite long and intensive. Otherwise, having a few ISCAM assignments done in class that the students can show how those can be done to enhance their learning experiences while improving class participation.*
+
+*Finally, weekly research assignments to me were very integral to my learning experience in the class. They have helped me use R and my statistics understanding to do an independent study on my preferred topics. Moreover, I learned the most from those just since everyone research topics are different so I independently have strived to investigate and use different functions from R through different variables to produce new variables/data to simulate and produce the research results that are applicable to the real world issues.*
+
+**Which materials will you not include in your own course? Why will you leave them out (be very specific and cite examples)?**
+
+*I would take away the note card questions and the CrowdGrader or the ability to grade of STT 2810 class on CrowdGrader. Firstly, I think it is unproductive if there is no question but the students still have to include a question in the note card everyday going to class. I think it would be more productive if there is a ten minutes span in the end of the class where students can ask questions pertaining to ISCAM, research assignment, or class materials.*
+
+*Secondly, from my personal experiences, STT 2810 students sometime took points off for requirements that are not on the rubric or they did not look into hard enough. For instance, in my ANOVA or Correlation Assignment, they took points off for me not including a bivariate when it was there or not including null or alternative hypothesis when it was not required in the rubric.*
+
+*Thirdly, for the small size of STT 5811 class, I think it is difficult to let anonymously give someone's work a low score without worrying about their feelings or inevitably feel bad for receiving bad grade. I think I got one with a low grade and in my head, I feel a little bit of resentment since they were being harsh with a few questions on that assignment.*
+
+**Which three topics will you find easiest to cover because of what you learned in this course (be very specific and cite examples)?**
+
+*Three topics I find easiest to cover because of what I learned in this course are the behavior of the distribution, the different types of errors, and the prediction interval.* 
+
+*The behavior of the distribution is the first information that help visualize the distribution of the data including the shape, center, and the variability of the distribution. It is important to understand how the center and the variability of the distribution can change based on the shape of the distribution. For instance, in Water Oxygen Levels investigation, since the data from the first year in WaterQuality.txt distribution is skewed right, using the  five-number summary is more preferrable.*
+
+*Different common error types in statistics include Type I and Type II errors. Type I error is when the researcher conclude to reject the null hypothesis when it is in fact true. Type II error is not rejecting the null hypothesis when in fact the alternate hypothesis is true. For instance, in ISCAM 1.6, type I error in the context of Improved Baseball Player investigation is when the manager is convinced with evidences that the player has improved his batting average when the player actually has not improved his batting average.*
+
+*Prediction interval is for predicting an individual outcome rather than the population mean. For Healthy Body Temperatures(cont) investigation, a 95% prediction interval for an individual healthy adult body temperature is from 96.7931743 and 99.7048257 which indicating that we are 95% confident that individual (future) observations of human body temperature will fall between 96.7931743 and 99.7048257.*
+
+**How will you reorder the presentation of topics to make things more clear to your own students? What is your rationale for any changes?**
+
+*I would reorder the presentation of topics such as I would have the students to read the `Reproducible Research with R and RStudio` book earlier before starting to require the assignment to be done in R. Since the book is about utilizing R, RStudio, LaTeX, and Github to help produce reproducible research, it would be beneficial to students' learning experience to have read it first or even be required to do some examples like the few last ISCAM assignments to demonstrate their understanding of the reading.*
