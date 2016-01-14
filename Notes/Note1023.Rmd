@@ -1,0 +1,21 @@
+---
+title: "Note1023"
+output: html_document
+---
+
+```{r}
+library(binom)
+binom.confint(x=0.324*47000, n = 47000, conf =.99)
+```
+
+We are 99% confident that the true proportion of household in the US has a cat is between 31.8 percent and 32.9 percent. 
+
+This method has a coverage probability of 99%
+
+Small p-value so we shall then reject the null hypothesis
+*$H_o$: $\pi_1$  = $\pi_2$  = $\pi_3$  = $\pi_4$*     
+*$H_a$: not all $\pi$'s the same*
+You can't have pratical differences from difference that arent' significant.
+
+pf(3,2,10)
+1-pf(3,2,10)

@@ -1,0 +1,356 @@
+---
+title: "Data Management Assignment"
+output: html_document
+date: 09/25/15
+---
+
+### Purpose of Study
+While poverty and socioeconomic status are prime features in the increase of Heart Failure and other heart issues. This study will (1) observe the income, physical fitness, health conditions, and personal habits of the sample body; (2) determine if there is a direct link or not between socieconmic status and heart issues.
+
+### Variables
+
+Variables from AddHealthW4 that will be used include: `H4IR4` (Indicate the race of the sample member/respondent from your own observation), `H4EC1` (Income), `H4ID5E` (Heart Disease), `H4BDCL5` (Blood Pressure), `H4DA13` (How often the sample member physically exercises)
+
+### Data Management
+
+First, the data is placed on the search path using the `PDS` package.
+Next, a subset of people ages 24-34 is created using the `filter` function from `dplyr`. `!is.na()` is used to make sure the subset does not contain `NA`s for the chosen variables.  Last, the variables of interest are selected and stored in the data frame `addhealth_public4.sub` using the `select` function from the `dplyr` package.
+
+```{r}
+library(PDS)
+library(dplyr)
+addhealth_public4.sub <- addhealth_public4 %>% 
+  filter(!is.na(h4ir4), !is.na(h4ec1), !is.na(h4bpcls), !is.na(h4id5e), !is.na(h4da13)) %>% 
+  select(h4ir4, h4ec1, h4bpcls, h4id5e, h4da13, h4gh7, bio_sex, h4gh6, h4to34, h4gh8)
+dim(addhealth_public4.sub)
+```
+
+### Coding missing values
+
+The variable `h4ec1` uses a 96 and 98 to record `unknown` for income of the sample population. A 6, 7, and 9 are used to record `unknown` for `h4bpcls` regarding the classification of blood pressure. Lastly, a 6 is used in the variable `h4id5e` to record the `unknown` for sample members answering if they have a heart condition.
+
+```{r label = "CodeMissing"}
+addhealth_public4.sub$h4ec1[addhealth_public4.sub$h4ec1 == 96 | addhealth_public4.sub$h4ec1 == 98] <- NA
+summary(addhealth_public4.sub$h4ec1)
+addhealth_public4.sub$h4bpcls <- factor(addhealth_public4.sub$h4bpcls)[, drop = TRUE]
+addhealth_public4.sub$h4bpcls[addhealth_public4.sub$h4bpcls == 6 | addhealth_public4.sub$h4bpcls == 7 | addhealth_public4.sub$h4bpcls == 9] <- NA 
+summary(addhealth_public4.sub$h4bpcls)
+summary(addhealth_public4.sub$h4ir4)
+addhealth_public4.sub$h4id5e[addhealth_public4.sub$h4id5e == 6] <- NA
+addhealth_public4.sub$h4id5e <- factor(addhealth_public4.sub$h4id5e)[ , drop = TRUE]
+summary(addhealth_public4.sub)
+addhealth_public4.sub$h4da13[addhealth_public4.sub$h4da13 == 96 | addhealth_public4.sub$h4da13 == 97 | addhealth_public4.sub$h4da13 == 98] <- NA 
+addhealth_public4.sub$h4gh7[addhealth_public4.sub$h4gh7 == 6 | addhealth_public4.sub$h4gh7 == 8] <- NA
+summary(addhealth_public4.sub$h4gh7)
+addhealth_public4.sub$bio_sex[addhealth_public4.sub$bio_sex == 6] <- NA
+addhealth_public4.sub$h4gh6[addhealth_public4.sub$h4gh6 == 996 | addhealth_public4.sub$h4gh6 == 998] <- NA
+addhealth_public4.sub$h4to34[addhealth_public4.sub$h4to34 == 96| addhealth_public4.sub$h4to34 == 97 | addhealth_public4.sub$h4to34 == 98] <- NA
+addhealth_public4.sub$h4gh8[addhealth_public4.sub$h4gh8 == 996 | addhealth_public4.sub$h4gh8 == 998] <- NA
+```
+
+### Labeling Variables
+
+In the next section of code, variables are labeled and levels of factors are given informative labels.  The order of the levels is also rearranged for the variables `h4ir4`, `h4ec1`, `h4id5e`, and `h4bpcls`.
+
+```{r}
+library(Hmisc)
+label(addhealth_public4.sub$h4ir4) <- "Sample Member Ethnicity"
+label(addhealth_public4.sub$h4ec1) <- "Sample Member Income"
+label(addhealth_public4.sub$h4id5e) <- "Diagnosed with Heart Disease"
+label(addhealth_public4.sub$h4bpcls) <- "Blood pressure classification"
+label(addhealth_public4.sub$h4da13) <- "Use of Physical Activity Centers per week"
+label(addhealth_public4.sub$h4gh7) <- "Weight Classification"
+label(addhealth_public4.sub$bio_sex) <- "Gender"
+label(addhealth_public4.sub$h4gh6) <- "Weight in Pounds"
+label(addhealth_public4.sub$h4to34) <- "Age When They Started Drinking"
+label(addhealth_public4.sub$h4gh8) <- "Number of times Member ate Fast Food in A Week"
+addhealth_public4.sub$h4id5e <- factor(addhealth_public4.sub$h4id5e, labels = c("no", "yes"))
+addhealth_public4.sub$h4bpcls <- factor(addhealth_public4.sub$h4bpcls, labels = c("normal", "prehypertension", "hypertension I", "hypertension II")) #normal: systolic=120<, diastolic=80<
+addhealth_public4.sub$h4ec1 <- factor(addhealth_public4.sub$h4ec1, labels = c("less than $5,000", "$5,000 to $9,999", "$10,000 to $14,999", "$15,000 to $19,999", "$20,000 to $24,999", "$25,000 to $29,999", "$30,000 to $39,999", "$40,000 to $49,999", "$50,000 to $74,999", "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more"))
+addhealth_public4.sub$h4ir4 <- factor(addhealth_public4.sub$h4ir4, labels = c("White", "African American", "Native American", "Asian"))
+addhealth_public4.sub$h4gh7 <- factor(addhealth_public4.sub$h4gh7, labels = c("very underweight", "slightly underweight", "about the right weight", "slightly overweight", "very overweight"))
+addhealth_public4.sub$bio_sex <- factor(addhealth_public4.sub$bio_sex, labels = c("male", "female"))
+```
+
+### Renaming Variables
+
+```{r}
+addhealth_public4.sub <- addhealth_public4.sub %>% 
+  rename(Race = h4ir4, BloodPressure = h4bpcls, HeartDisease = h4id5e, Income = h4ec1, PhysicalActivityPerWeek = h4da13, WeightClassification = h4gh7, Gender = bio_sex, Weight = h4gh6, AgeWhenStartedDrinking = h4to34, FastFood = h4gh8)
+head(addhealth_public4.sub)
+```
+
+### Creating Tables
+
+Basic tables can be created using the functions `table` or `xtabs`. Frequency tables are created for the variables `Race`,  `BloodPressure`, `HeartDisease`, and `Income`.
+
+```{r}
+T1 <- xtabs(~Race, data = addhealth_public4.sub)
+T2 <- xtabs(~BloodPressure, data = addhealth_public4.sub)
+T3 <- xtabs(~HeartDisease, data = addhealth_public4.sub)
+T4 <- xtabs(~Income, data = addhealth_public4.sub)
+T5 <- xtabs(~PhysicalActivityPerWeek, data = addhealth_public4.sub)
+T6 <- xtabs(~WeightClassification, data = addhealth_public4.sub)
+T7 <- xtabs(~Weight, data = addhealth_public4.sub)
+T8 <- xtabs(~FastFood, data = addhealth_public4.sub)
+```
+
+### Graphing Frequency Tables
+
+The barplots are all created with the package `ggplot2`.  The barplots start with the defaults for the `geom_bar` and add more detail to the plot with each graph.
+
+```{r}
+library(ggplot2)
+g1 <- ggplot(data = addhealth_public4.sub, aes(x = Race)) + 
+  geom_bar(fill = "gold") +
+  labs(x = "Race", y = "Total Number", title = "Sample Member Ethnicity") + theme_bw()
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+g1
+```
+
+This bar graph depicts the ethnicities of the sample population as reported by the interviewers. The majority of the population interviewed were White, followed by African American, Asian and lastly, Native American. 
+
+```{r}
+g2 <- ggplot(data = addhealth_public4.sub, aes(x = BloodPressure)) +
+  geom_bar(fill = "blue") +
+  labs(x = "Blood Pressure Type", y = "Total Number", title = "Blood Pressure Condition") + theme_bw()
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+g2
+```
+
+The graph explicitly shows that the majority of the population has 'prehypertension'. This indicates that the majority of the population has an above average blood pressure. It is not problematic unless their blood pressure is closer to the hypertension level, which is >140 mmHg. However, there is still about a third of the population that has Hypertension I or II and are subjected to heart issues.
+
+```{r}
+g3 <- ggplot(data = addhealth_public4.sub, aes(x = HeartDisease)) +
+  geom_bar(fill = "red") +
+  labs(x = "Diagnosed?", y = "Total Number", title = "Diagnosed with a Heart Condition") +
+  theme_bw() + 
+  theme(axis.text.x  = element_text(angle = 75, vjust = 0.5)) 
+g3
+```
+
+This graph explicitly shows that most of the population has not been diagnosed with any heart conditions.
+
+```{r}
+g4 <- ggplot(data = addhealth_public4.sub, aes(x = Income)) +
+    geom_bar(fill = "turquoise") +
+    labs(x = "Yearly Income in Dollars", y = "Number of Participants", title = "Annual Income") +
+    theme_bw() +
+     theme(axis.text.x  = element_text(angle = 75, vjust = 0.5))
+g4
+```
+
+Graph four shows the annual income per household of the sample population. The majority of the population brings in $50,000 or more each year. However, roughly half of the population makes under $40,000 a year and half of that live below the poverty line (<$15,000). Therefore, we can speculate that those individuals suffer from hypertension and have been diagnosed with heart conditions. There is still an insufficient amount of data that has been collected so we cannot officially determine if that is true or not. 
+
+### Graphing Numerical Variables
+
+```{r}
+ggplot(data = addhealth_public4.sub, aes(x = PhysicalActivityPerWeek)) +
+  geom_histogram(binwidth = 1, fill = "orange") + 
+  labs(x = "Number of Times", y = "Number of Participants", title = "Number of Times Sample Member Exercised Per Week") +
+  theme_bw()
+```
+
+This histogram shows the activity levels of the sample members. The majority does not exercise and that can lead to health issues, especially heart related. The median is 0.0, the mean is 0.9662, and the graph is skewed left.
+
+### The 3 S's
+
+```{r}
+summary(addhealth_public4.sub$PhysicalActivityPerWeek)
+fivenum(addhealth_public4.sub$PhysicalActivityPerWeek)
+median(addhealth_public4.sub$PhysicalActivityPerWeek, na.rm = TRUE)
+IQR(addhealth_public4.sub$PhysicalActivityPerWeek, na.rm = TRUE)
+```
+
+### Bivariate Graphs 
+
+## Graph
+```{r}
+library(ggplot2)
+ggplot(data = addhealth_public4.sub, aes(x = BloodPressure, fill = WeightClassification)) + 
+  geom_bar(position = "fill") +
+  theme_bw() + 
+  labs(x = "", y = "Fraction", 
+       title = "Fraction of sample member's blood pressure\nand their weight classification") +
+  theme(axis.text.x  = element_text(angle = 85, vjust = 0.5)) 
+```
+
+This graph shows the type of blood pressure and the sample member's weight classification for each pressure they are catagorized in. It shows that most people are slightly overweight or very overweight. Most of the people who are very overweight have hypertension II blood pressure which leads to heart issues.
+
+### Multivariate Graphs
+
+## Graph
+```{r}
+ggplot(data = na.omit(addhealth_public4.sub), aes(x = Race, fill = HeartDisease)) +   geom_bar(position = "fill") +
+  theme_bw() + 
+  labs(x = "", y = "Fraction", 
+       title = "Fraction of sample members with\nheart disease and their race") + 
+  scale_fill_manual(values = c("blue", "Red"), name = "Heart Disease") + 
+  guides(fill = guide_legend(reverse = TRUE)) + 
+  facet_grid(Gender~.) +
+  theme(axis.text.x  = element_text(angle = 85, vjust = 0.5)) 
+```
+
+This graph shows the heart disease status of males and feamles of different ethnicities. It explicitly shows the reader that many individuals do not have heart disease, with African Americans having the most individuals with heart issues.
+
+## ANOVA
+
+
+I am comparing the number of times the particpants exercised per week, to their individual race.
+
+
+$H_0:\mu_{PhysicalActivityPerWeek} = \mu_{White}$ = \mu_{AfricanAmerican}$ = \mu_{NativeAmerican}$ = \mu_{Asian}$ versus
+$H_1:\mu_{i} \neq \mu_{j}$ for at least one $i \neq j$ pair.
+
+
+Null hypothesis: There is no association between and individual's race and the number of times they exercise per week.
+
+Alternative hypothesis: There is an association between and individual's race and the number of times they exercise per week.
+
+```{r}
+tapply(addhealth_public4.sub$PhysicalActivityPerWeek, addhealth_public4.sub$Race, mean, na.rm=TRUE)
+tapply(addhealth_public4.sub$PhysicalActivityPerWeek, addhealth_public4.sub$Race, sd, na.rm=TRUE)
+```
+
+###Box Plots
+
+```{r}
+library(ggplot2)
+ggplot(data = addhealth_public4.sub, aes(x = Race, y = PhysicalActivityPerWeek, fill = Race)) +
+  geom_boxplot() +
+  theme_bw() + 
+  guides(fill = FALSE) + 
+  labs(x = "Race", y = "Physical Activity Per Week", title = "Relationship between member's race\nand the number of times they exercise per week")
+ggplot(data = addhealth_public4.sub, aes(x = Race, y = PhysicalActivityPerWeek, fill = Race)) +
+  geom_violin() +
+  theme_bw() +
+  guides(fill = FALSE) + 
+  labs(x = "Race", y = "Physical Activity Per Week")
+```
+
+
+```{r}
+mod1 <- aov(PhysicalActivityPerWeek ~ Race, data = addhealth_public4.sub)
+mod1
+summary(mod1)
+mod2 <- lm(PhysicalActivityPerWeek ~ Race, data = addhealth_public4.sub)
+mod2
+anova(mod2)
+CIS <- TukeyHSD(mod1)
+CIS
+opar <- par(no.readonly = TRUE)  # copy of current settings
+par(mar =c(2, 15, 2, 1)) 
+plot(CIS, las = 1)                       # restore original settings
+par(opar)
+```
+
+Due to the p-value being below 0.05, I would reject the null hypothesis that there is no association between the sample member's race and the number of times they exercise per week. In the post hoc test, there were two values that were under 0.05: "Asian-White" and "Asian-Africa American." Therefore there is a correlation between those variables.
+
+##Chi Square Test of Independence
+
+Null Hypothesis: There is no association between a sample member's blood pressure and their gender.
+Alternative Hypothesis: There is an association between a sample member's blood pressure and their gender.
+
+```{r}
+T1 <- xtabs(~Gender + BloodPressure, data = addhealth_public4.sub)
+T1
+T2 <- prop.table(T1, 2)
+T2
+barplot(T2)
+library(ggplot2)
+ggplot(data = na.omit(addhealth_public4.sub), aes(x = BloodPressure, fill = Gender)) + 
+  geom_bar(position = "fill") + 
+  theme_bw()
+chisq.test(T1)
+```
+
+When examining the association between gender (categorical response) and sample member's blood pressure (categorical explanatory), a chi-square test of independence revealed that, females (my sample), were more likely to have normal blood pressure (77.97%) compared to males (22.03%), Ï‡2= 640.54, 3 df, p < 2.2e-16.
+
+###Post Hoc Test
+
+```{r}
+NT <- xtabs(~ Gender + BloodPressure, data = addhealth_public4.sub)
+NT
+chisq.test(NT, correct = FALSE)
+chisq.test(NT[, c(1, 2)], correct = FALSE)
+chisq.test(NT[, c(1, 3)], correct = FALSE)
+chisq.test(NT[, c(1, 4)], correct = FALSE)
+chisq.test(NT[, c(2, 3)], correct = FALSE)
+chisq.test(NT[, c(2, 4)], correct = FALSE)
+chisq.test(NT[, c(3, 4)], correct = FALSE)
+```
+
+
+A Chi Square test of independence revealed that the sample member's gender (my sample) and their blood pressure were significantly associated, Ï‡2 = 640.54, 3 df, p < 2.2e-16. Post hoc comparisons of the sample member's gender and their blood pressure revealed that higher rates of blood pressure were among males.
+
+
+###Correlation
+ 
+ 
+ I will be comparing the weight of the respondents and the year they started drinking to see if there is a correlation between the two.
+ 
+ 
+Null Hypothesis: There is no association between the age the respondents started drinking and their weight.
+ALternative Hypothesis: There is an association between the age the respondents started drinking and their weight.
+
+```{r}
+library(PDS)
+head(addhealth_public4.sub)
+plot(AgeWhenStartedDrinking ~ Weight, data = addhealth_public4.sub)
+mod <- lm(AgeWhenStartedDrinking ~ Weight, data = addhealth_public4.sub)
+summary(mod)
+abline(mod)
+```
+
+```{r}
+library(ggplot2)
+ ggplot(data = addhealth_public4.sub, aes(x = AgeWhenStartedDrinking, y = Weight)) + 
+  geom_point(color = "black") +
+  theme_bw() + 
+  labs(x = "Age When Respondent Started Drinking (years)", y = "Weight (pounds)", title = "Relationship between sample member's weight/nand the age they started drinking") +
+ stat_smooth(method = lm)
+```
+
+There is neither a positive or negative direction in the graph. The strength is weak as it has a negative correlation of -0.01457733. Since the value is close to zero, it has a weak linear relationship. There are a few outliers as some respondents are either very overweight, or very underweight. 
+
+```{r}
+ cor(addhealth_public4.sub$Weight, addhealth_public4.sub$AgeWhenStartedDrinking)
+ cor.test(addhealth_public4.sub$AgeWhenStartedDrinking, addhealth_public4.sub$Weight)
+```
+
+Because the value is small and negative, I would reject the null hypothesis and determine that there is a small relationship between the two as it does not have a correlation coefficient of 0. People do tend to gain weight when they start drinking and it can effect their health in the long run.
+
+
+###Regression
+
+I am comparing the weight of the sample member's and how many times per week they dine out at fast food restaurants
+
+$H_0:\beta_{1} =0$ versus $H_A:\beta_{1} \neq 0$
+
+Null Hypothesis: The slope of the line will be zero when comparing the sample member's weight and how many times they eat fast food per week.
+Alternative Hypothesis: The slope of the line will not be equal to zero when compaing the sample member's weight and how many times they eat fast food per week.
+
+
+```{r}
+library(PDS)
+plot(FastFood ~ Weight, data = addhealth_public4.sub)
+mod <- lm(FastFood ~ Weight, data = addhealth_public4.sub)
+summary(mod)
+abline(mod)
+cor(addhealth_public4.sub$Weight, addhealth_public4.sub$FastFood)
+cor.test(addhealth_public4.sub$Weight, addhealth_public4.sub$FastFood)
+```
+
+```{r}
+library(grid)
+library(ggplot2)
+ggplot(data = addhealth_public4.sub, aes(x = Weight, y = FastFood)) + 
+   geom_point(color = "Red") +
+   theme_bw() + 
+   labs(x = "Sample Member Weight (pounds)", y = "Number of Times Member Ate Fast Food in a Week", title = "Comparison of Sample Member's Weight\nand How Many Times They Eat Fast Food per Week") + 
+   geom_smooth(method = lm, se = FALSE) 
+```
+
+Number of times sample member ate fast food per week = 0.0037988*x + 1.683174
+
+The slope of the line is 0.0037988 and the y-intercept is 1.683174. This tells me that there is a small positive increase in a person's weight and how many times they eat fast food per week. The p-value is 0.0001334 and since the value is under 0.05, I would reject the null hypotheisis and accept the alternative. The slope is therefore not equal to zero. The correlation between the two is 0.05425791 and therefore there is a positive relationship between them with a slightly strong linear relationship as well. There are a couple of outliers as well. 

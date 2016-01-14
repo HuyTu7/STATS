@@ -1,0 +1,18 @@
+\documentclass{article}
+
+\begin{document}
+\begin{titlepage}
+\title{First Book}
+\author{Beyonce'}
+\maketitle
+\end{titlepage}
+
+<<SetChild, child = '~/Tu-Huy/ISCAM/Child1.Rnw'>>=
+@
+<<SetChild, child = '~/Tu-Huy/ISCAM/Child2.Rnw'>>=
+@
+<<SetChild, child = '~/Tu-Huy/ISCAM/Child3.Rnw'>>=
+@
+
+\clearpage
+\end{document}

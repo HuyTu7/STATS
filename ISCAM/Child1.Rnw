@@ -1,0 +1,7 @@
+\section{Variance}
+
+
+\[
+(\sigma)^2 = \frac{1}{N}\sum\limits_{i=1}^n (x_{i} - \mu)^2
+\]
+

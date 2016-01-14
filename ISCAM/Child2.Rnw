@@ -1,0 +1,6 @@
+\section{Standard Deviation}
+
+
+\[
+\sigma = \sqrt{\frac{1}{N}\sum\limits_{i=1}^n (x_{i} - \mu)^2}
+\]

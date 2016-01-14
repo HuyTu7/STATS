@@ -1,0 +1,25 @@
+\documentclass{book}
+\usepackage{hyperref}
+\usepackage{makeidx}
+
+\begin{document}
+
+<<include=FALSE>>=
+library(knitr)
+opts_chunk$set(
+concordance=TRUE
+)
+@
+
+
+\title{First Book}
+\author{Beyonce'}
+\maketitle
+
+<<child-demo, child='Child1.Rnw'>>=
+@
+
+
+\clearpage
+\printindex
+\end{document}

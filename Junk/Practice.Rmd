@@ -1,0 +1,194 @@
+---
+title: "Practice"
+output: 
+  html_document: 
+    highlight: zenburn
+    theme: readable
+date: "`r Sys.Date()`"
+---
+
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(comment = NA, message = FALSE, warning = FALSE, fig.align = "center")
+library(dplyr)
+library(ggplot2)
+library(descr)
+```
+
+
+An article in the *Journal of Statistics Education* reported the price of diamonds of different sizes in Singapore dollars (SGD).  The following data frame (`DF`) contains a data set that is consistent with this data, adjusted to US dollars in 2004:
+
+```{r}
+USdollars <- c(494.82, 768.03, 1105.03, 1508.88, 1826.18, 2096.89, 688.24, 944.90, 1071.75, 1504.44, 1908.28, 2409.76, 748.10, 1076.18, 1289.20, 1597.63, 2038.09)
+Carat <- c(0.12, 0.17, 0.20, 0.25, 0.28, 0.33, 0.15, 0.18, 0.21, 0.26, 0.29, 0.35, 0.16, 0.19, 0.23, 0.27, 0.32)
+DF <- data.frame(USdollars = USdollars, Carat = Carat)
+rm("Carat", "USdollars")
+head(DF)
+```
+
+1.  Make a scatterplot and describe the association between the size of the diamond (carat) and the cost (in US dollars).
+```{r}
+library(ggplot2)
+ggplot(data = DF, aes(x = Carat, y = USdollars)) + 
+  geom_point() +
+  theme_bw() 
+```
+
+2.  Create a model to predict diamond costs from the size of the diamond.
+```{r}
+mod.lm <- lm(USdollars~Carat, data = DF)
+MEAN <- apply(DF, 2, mean)
+SD <- apply(DF, 2, sd)
+MEAN
+SD
+coef(summary(mod.lm))
+b <- coef(summary(mod.lm))[2, 1]
+```
+**Y = `r b`(Carat) `r coef(summary(mod.lm))[1,1]` is a possible model to predict diamond cost from the size of diamond**
+
+3. Do you think a linear model is appropriate here?  Explain.
+```{r}
+r <- cor(DF$Carat, DF$USdollars, use = "complete.obs")
+summary(mod.lm)
+plot(mod.lm, which = 1)
+```
+
+**At first, I thought so due to the high correlation r, (`r r` > 0.5). However, the residual plot shows a concave up parabola curve pattern and that concerns me that it would not be good to apply the linear model here.**
+
+4.  Interpret the slope of your model in context.
+
+**For every carat increase as the size of a diamond, the maximum cost for the diamond would increases, on average, by `r b` in Singapore dollars.**
+
+5.  Interpret the intercept of your model in context.
+
+**If the diamond size is 0 Carat then the predicted cost of that diamond would be `r coef(summary(mod.lm))[1,1]` (SGD).** 
+
+6.  What is the correlation between cost and size?
+
+```{r}
+ggplot(data = DF, aes(x = Carat, y = USdollars)) + 
+    geom_point(color = "purple") +
+    theme_bw() + 
+    labs(x = "Size of the diamond(Carat)", y = "Cost of the Diamond($)") + 
+    geom_smooth(method = "lm", se = TRUE) 
+```
+
+**From the correlation test, we received r that is very close to 1, indicating a strong relationship between two variables including Carat as a size of a diamond and the price of the diamond. Moreover, looking at the figure above, you can see that a relationship is in a linear form. Since r > 0, there is a positive (or increasing) relationship between the two variables, means that an increase in size of the diamonds is associated with an increase in the cost of the diamond.**
+
+7.  Explain the meaning of $R^2$ in the context of this problem.
+
+```{r}
+var <- r^2
+```
+
+**$R^2$ in this context suggests that `r var*100`% (i.e. `r r` squared) of the variance in cost of the diamond can be explained by the size of the diamond.**
+
+8.  Would it be better for a customer buying a diamond to have a negative residual or a positive residual from this model?  Explain.
+
+**It would be better for a customer buying a diamond to have a negative residual which means that the price that the customer purchasing for the diamond is lower than the estimated price. Therefore, the customer got a good deal and save their money from buying a diamond that have a negative residual.**
+
+-----------
+
+Of the 23 first year male students at State U. admitted for Jim Thorpe High School, 8 were offered baseball scholarships and 7 were offered football scholarships.  The University admissions committee looked at the students' composite ACT scores wondering if the University was lowering their standards for athletes.  Assuming that this group of students is representative of all admitted students, what do you think?
+
+```{r}
+Baseball <- c(25, 22, 19, 25, 24, 25, 24, 23)
+NonAthletes <- c(21, 27, 29, 26, 30, 27, 26, 23)
+Football <- c(22, 21, 24, 27, 19, 23, 17, NA)
+DF2 <- stack(data.frame(Baseball, NonAthletes, Football))
+colnames(DF2) <- list("ACT", "Sport")
+head(DF2)
+```
+
+1. Test an appropriate hypothesis and state your conclusion.  Specify the null and alternative hypotheses with both mathematical symbols and with a verbal (English) description.
+
+*$H_o$: $\pi_{athlete}$  = $\pi_{non-athlete}$ or $\pi_{non-athlete}$ - $\pi_{athlete} = 0$*
+
+*$H_a$: $\pi_{athlete}$  < $\pi_{non-athlete}$ or $\pi_{non-athlete}$ - $\pi_{athlete} > 0$*
+
+```{r}
+Athlete <- c(Baseball, Football)
+s1 <- mean(Athlete, na.rm = TRUE)
+n1 <- length(Athlete) - 1
+s2 <- mean(NonAthletes)
+n2 <- length(NonAthletes)
+SE <- sqrt((s1^2/n1) + (s2^2/n2))
+DF <- ((s1^2/n1 + s2^2/n2)^2) / (((s1^2 / n1)^2 / (n1 - 1)) + ((s2^2 / n2)^2 / (n2 - 1)))
+t = (s2 - s1)/SE 
+```
+**The Standard error, degree of freedom, and t value of this data are `r SE`, `r DF`, and `r t` respectively. We then calculate the p-value to test our hypothesis.**
+
+```{r}
+P_val <- pt(t, df = DF)
+```
+
+**Since the p-value (`r P_val`) is > 0.1. We do not have enough evidence to reject the null hypothesis and we have to reject the alternative hypothesis. There is no clear evidence that if the University was lowering their standards for athletes.**
+
+2.  Are the two sports teams mean ACT scores different?
+
+```{r}
+M_Base <- mean(Baseball)
+M_Foot <- mean(Football, na.rm = TRUE)
+```
+
+**The Baseball team ACT scores mean is `r M_Base` and the football team ACT scores mean is `r M_Foot`. The two sports teams mean ACT scores are different.**
+
+------------------
+
+Use the data frame `Snore` from the `BSDA` package to determine if snoring and heart-disease are related.  
+
+1.  Write the null and alternative hypotheses.
+```{r}
+library(BSDA)
+summary(Snore)
+```
+*$H_o$: $\rho$  = 0*
+
+*$H_a$: $\rho$  $\neq$ 0*
+
+2.  Test your null hypothesis and state your conclusion?  
+
+```{r}
+A = matrix(NA, ncol = 2, nrow = 2)
+A[1, 1] <- Snore$occasion[1] + Snore$nearly[1] + Snore$every[1]
+A[2, 1] <- Snore$occasion[2] + Snore$nearly[2] + Snore$every[2]
+A[1, 2] <- Snore$Non[1]
+A[2, 2] <- Snore$Non[2]
+DF <- data.frame(A)
+DF <- DF %>%
+  rename(Snoring = X1, Not_Snoring  = X2)
+DF
+ChiS1 <- chisq.test(DF, correct = FALSE)
+ChiS1
+```
+
+**From the Chi-Square test, we find that the p-value for this test is $`r ChiS1[3]`$ which is extrememly small and definitely smaller than 0.01 which indicate that it is statistically significant. Therefore, we have a very strong evidence and we can reject the null hypothesis and accept the alternative hypothesis that there is a relationship between Snoring and heart-disease.($\chi ^2 = `r ChiS1[1]`, df = `r ChiS1[2]`, p = `r ChiS1[3]` < 0.01$)**
+
+3. Do you need to run any post-hoc tests?  If so, how many post-hoc tests do you need to examine?  If indicated, perform the post-hoc tests and interpret your findings.
+
+```{r}
+n <- choose(ncol(Snore)-1, nrow(Snore))
+limit <- 0.05/n
+limit
+```
+
+**Since the result from the Chi-Square test is significant, there will be 6 post hoc tests comparing between columns of variable the catergorical responses of snoring. The standard significant for gauging the smallness of a p-value is 0.05 but there are 6 individual test inside that big one so we have to divide it by 6. Therefore, the result of one of these test would be significant if the post hoc test has a p-value that is less than `r limit`.**
+
+```{r}
+chisq.test(Snore[, c(2, 3)], correct = FALSE)
+chisq.test(Snore[, c(2, 4)], correct = FALSE)
+chisq.test(Snore[, c(2, 5)], correct = FALSE)
+chisq.test(Snore[, c(3, 4)], correct = FALSE)
+chisq.test(Snore[, c(3, 5)], correct = FALSE)
+chisq.test(Snore[, c(4, 5)], correct = FALSE)
+```
+
+**Post hoc comparisons of heart-diseases and snoring revealed that higher chance of having heart diseases were seen among those who snore more frequently. After the above process, it was found that there were 4 significant results including:**
+
+**-“none” and “occasion” (Column 2 and 3),**
+
+**-“none” and “nearly” (Column 2 and 4),**
+
+**-“none” and “nearly” (Column 2 and 5),**
+
+**-“occasion” and “every” (Column 3 and 5)**
+

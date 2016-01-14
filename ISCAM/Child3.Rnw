@@ -1,0 +1,9 @@
+\section{Mean}
+
+
+\[
+\bar{x} = \frac{1}{N}\sum\limits_{i=1}^n (x_{i})
+\]
+
+
+

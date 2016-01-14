@@ -1,0 +1,18 @@
+\documentclass{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+Hello,...
+
+<< echo = FALSE >>=
+ANS <- 24 +35+23+14
+ANS
+@
+
+Josh already knows how to add 24, 35, 23, and 14 to get \Sexpr{ANS}
+
+\section{Huy}
+
+
+\end{document}
