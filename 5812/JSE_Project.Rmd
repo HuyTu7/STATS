@@ -1,0 +1,78 @@
+---
+title: "JSE Project"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+SimpsonP <- read.csv(file="Simpson_Stand_Ground_2015.csv",head=TRUE,sep=",")
+SimpsonP
+```
+
+```{r}
+TFull <- xtabs(~Convicted + Accused, data= SimpsonP)
+TFull
+```
+
+```{r}
+SimpsonPVM <- SimpsonP[SimpsonP$MinVictim == 1, ]
+head(SimpsonPVM)
+TVM <- xtabs(~Convicted + Accused, data= SimpsonPVM)
+TVM
+VicMinority <- TVM[2, 1] + TVM[2, 2]
+Con_Rate_VM <- VicMinority/dim(SimpsonPVM)[1]
+Con_Rate_VM
+
+SimpsonPVW <- SimpsonP[SimpsonP$WhiteVictim == 1, ]
+head(SimpsonPVW)
+TVW <- xtabs(~Convicted + Accused, data= SimpsonPVW)
+TVW
+VicWhite <- TVW[2, 1] + TVW[2, 2]
+Con_Rate_VW <- VicWhite/dim(SimpsonPVW)[1]
+Con_Rate_VW
+```
+
+The combined conviction rate when the victim was white was  $\frac{`r VicWhite`}{`r dim(SimpsonPVW)[1]`} = `r Con_Rate_VW*100`$ whereas the combined conviction rate when the victim was a minority was  $\frac{`r VicMinority`}{`r dim(SimpsonPVM)[1]`} = `r Con_Rate_VM*100`$. 
+
+```{r}
+SimpsonPWD <- SimpsonP[SimpsonP$Accused == "White", ]
+#head(SimpsonPWD)
+TWD <- xtabs(~WhiteVictim + MinVictim, data= SimpsonPWD)
+TWD
+WDEF_WV <- TWD[2,1]
+WDEF_WV_P <- WDEF_WV/dim(SimpsonPWD)[1]
+WDEF_WV_P 
+
+SimpsonPMD <- SimpsonP[SimpsonP$Accused == "Minority", ]
+#head(SimpsonPMD)
+TMD <- xtabs(~WhiteVictim + MinVictim, data= SimpsonPMD)
+TMD
+MDEF_MV <- TMD[1, 2]
+MDEF_MV_P <- MDEF_MV/dim(SimpsonPMD)[1]
+MDEF_MV_P
+```
+
+Moreover, most of the white defendants had white victims, 107 of 131, $\frac{`r WDEF_WV`}{`r dim(SimpsonPWD)[1]`}$ = $`r WDEF_WV_P*100`$(81.7%), while most of the minority defendants had minority victims, 64 of 89, $\frac{`r MDEF_MV`}{`r dim(SimpsonPMD)[1]`}$ = $`r MDEF_MV_P*100`$(71.9%). Because
+whites defendants mostly had white victims and having a white victim greatly increases the
+chance of conviction, at first it appears that the conviction rate is higher among white defendants
+because of the defendant’s race.
+
+```{r}
+#Convicted <- SimpsonP[SimpsonP$Conviction == "Yes", ]
+#WhiteVictim <- SimpsonP[SimpsonP$WhiteVictim == 1, ]
+LogRegModel <- glm(Convicted~Accused,family="binomial",data=SimpsonP)
+summary(LogRegModel)
+LogRegModel$coefficients
+
+MultLogModel <- glm(Convicted~WhiteVictim+ Accused,family="binomial",data=SimpsonP)
+summary(MultLogModel)
+MultLogModel$coefficients
+
+##1 is row, 2 is column, nothing is the whole thing
+A <- prop.table(TFull, 2)
+A[1][1]
+prop.table(TVM, 2)
+prop.table(TVW, 2)
+
+
+```
