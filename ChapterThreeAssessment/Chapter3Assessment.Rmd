@@ -116,12 +116,12 @@ AfAmPredB <- round(b0,digits = 2) #the predicted balance for an African American
 
 a. According to the balance vs ethnicity model (`ModEthnic`), what is the predicted balance for an Asian in the data set? (within 0.01 accuracy)
 
-**According to the balance vs ethnicity model (`ModEthnic`), the predicted balance for an Asian in the data set is `r AsianPredB`.**
+**According to the balance vs ethnicity model (`ModEthnic`), the predicted balance for an Asian in the data set is $`r AsianPredB`.**
 
 
 b. What is the predicted balance for an African American? (within .01 accuracy)
 
-**According to the balance vs ethnicity model (`ModEthnic`), the predicted balance for an African American in the data set is `r AfAmPredB`.**
+**According to the balance vs ethnicity model (`ModEthnic`), the predicted balance for an African American in the data set is $`r AfAmPredB`.**
 
 
 c. Construct a 90% confidence interval for the average credit card balance for Asians.
@@ -131,7 +131,7 @@ AsC <- predict(ModEthnic, newdata = data.frame(Ethnicity = "Asian"), interval = 
 
 ```
 
-**A 90% confidence interval for Asians credit card balance is `r AsC[2]` to `r AsC[3]`.**
+**A 90% confidence interval for Asians credit card balance is $`r AsC[2]` to $`r AsC[3]`.**
 
 d. Construct a 92% prediction interval for Joe's (who is African American) credit card balance.
 
@@ -139,7 +139,7 @@ d. Construct a 92% prediction interval for Joe's (who is African American) credi
 AfAmC <- predict(ModEthnic, newdata = data.frame(Ethnicity = "African American"), interval = 'prediction', level = .92)
 ```
 
-**A 92% prediction interval for Joe's (who is African American) credit card balance is `r AfAmC[2]` to `r AfAmC[3]`.**
+**A 92% prediction interval for Joe's (who is African American) credit card balance is $`r AfAmC[2]` to $`r AfAmC[3]`.**
 
 
 
