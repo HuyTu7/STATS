@@ -52,7 +52,7 @@ b_hat <- 0.5
 z <- qnorm(.975) #get z-score
 b_lower <- b_hat - z*StdE
 b_upper <- b_hat + z*StdE
-b_upper <- round(b_upper,digits = 2)
+b_upper <- round(b_upper,digits = 2) #round to 2 digits
 ```
 
 **The largest value of $b$ for which we would not reject the null hypothesis that $\beta_1=b$ is $b$ = `r b_upper`**
@@ -65,7 +65,7 @@ b.  Use a $t$ distribution with 10 degrees of freedom, and assume that we are us
 dfr <- 10
 t <- qt(0.95,df=dfr ) #get t-score
 b_upper <- b_hat + t*StdE
-b_upper <- round(b_upper, digits = 2)
+b_upper <- round(b_upper, digits = 2) #round to 2 digits
 ```
 
 **The largest value of $b$ for which we would not reject the null hypothesis that $\beta_1=b$ is $b$ = `r b_upper`**
@@ -112,7 +112,7 @@ AsianPredB <- round(AsianPredB,digits = 2)
 AfAmPredB <- round(b0,digits = 2) #the predicted balance for an African American in the data set
 ```
 
-$\pagebreak$
+
 
 a. According to the balance vs ethnicity model (`ModEthnic`), what is the predicted balance for an Asian in the data set? (within 0.01 accuracy)
 
@@ -170,7 +170,7 @@ CC2 <- coef(summary(mod))[5, 1]
 MYC <- coef(summary(mod))[6, 1]
 SYC <- coef(summary(mod))[7, 1]
 EC <- coef(summary(mod))[8, 1]
-
+#predict the rating by using the model "mod"
 ratingR <- C + cLimit*lC1 + (cLimit^2)*lC2 + cN*CC1 + (cN^2)*CC2 + (1)*MYC + (0)*SYC
 ratingR
 ```
@@ -194,7 +194,7 @@ CC2 <- coef(summary(mod))[5, 1]
 MYC <- coef(summary(mod))[6, 1]
 SYC <- coef(summary(mod))[7, 1]
 EC <- coef(summary(mod))[8, 1]
-
+#predict the rating by using the model "mod"
 ratingR <- C + cLimit*lC1 + (cLimit^2)*lC2 + cN*CC1 + (cN^2)*CC2 + (1)*MYC + (0)*SYC
 ratingR
 ```
@@ -237,7 +237,7 @@ RadioNC <- coef(modSales)[3] #coefficient of Radio variable for the model for sa
 TVvsRC <- coef(modSales)[4]  #coefficient of TV interacted with Radio variable for the model for sales vs TV interacted with radio
 
 Effect <- RadioN*RadioNC + TVN*RadioN*TVvsRC
-Effect <- round(Effect,digits = 4)
+Effect <- round(Effect,digits = 4) #round to 4 digits
 ```
 
 **According to the model for sales vs TV interacted with radio (`modSales`), the effect of an additional 1 unit of radio advertising if TV = 25 is `r Effect`.**
@@ -252,7 +252,7 @@ RadioNC <- coef(modSales)[3]  #coefficient of Radio variable for the model for s
 TVvsRC <- coef(modSales)[4]   #coefficient of TV interacted with Radio variable for the model for sales vs TV interacted with radio
 
 Effect <- RadioN*RadioNC + TVN*RadioN*TVvsRC
-Effect <- round(Effect,digits = 4)
+Effect <- round(Effect,digits = 4) #round to 4 digits
 ```
 
 **According to the model for sales vs TV interacted with radio (`modSales`), the effect of an additional 1 unit of radio advertising if TV = 300 is `r Effect`.**
