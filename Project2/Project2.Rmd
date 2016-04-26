@@ -1,0 +1,179 @@
+---
+title: "Modeling the Housing Price"
+date: '`r format(Sys.time(), "%B %d, %Y")`'
+bibliography:
+- ./BIB/CV.bib
+- ./BIB/TemplateRefs.bib
+- ./BIB/PackagesUsed.bib
+knit: "bookdown::render_book"
+output:
+  bookdown::html_document2:
+  self_contained: TRUE
+link-citations: yes
+---
+
+```{r, echo = FALSE, results= 'hide', message = FALSE, warning = FALSE}
+library(knitr)
+library(ggplot2)
+library(leaps)
+library(DT)
+library(MASS)
+library(ISLR)
+library(boot)
+```
+
+# Introduction:
+
+In this project, students are given housedata as the set of different houses with the recorded chosen variables associated with each house. With the instruction from professor Arnholt, the students will explore, manipulate, and train the data from the file housedata.csv to learn the relationship between price in association with other necessary variables chosen by the students to create a model to predict prices of house from the given dataset called housedataTest from [King County, Department of Assessments](http://your.kingcounty.gov/assessor/eRealProperty/ResGlossaryOfTerms.html). The goal is to analyze the pattern of data and predict future results while minimizing the differences of the actual results from the predicted results. Some important factors are hypothesized to be notably considered for the price of the house on the market can be the number of the bedrooms in the house, the number of floors, and the location of the house. 
+
+# Methods:
+
+## Data Collection
+
+The training data used in this paper was originally downloaded from the link below:
+
+https://raw.githubusercontent.com/STAT-ATA-ASU/STT3851Spring2016/gh-pages/Data/housedata.csv 
+
+The testing data was given to the students in the class private repository on the open source github under the STT3851Spring2016 repository, inside the folder Data, with the name of `housedataTEST.csv`. As mentioned above, variable descriptions were obtained from [King County, Department of Assessments](http://your.kingcounty.gov/assessor/eRealProperty/ResGlossaryOfTerms.html).
+
+## Exploratory Analysis
+
+The data are being read in, transformed, and polished to a more accessible and utilitarian format. There were no NA values in the dataset. Moreover, the `id` variable is just unique id that is given to categorize and distinguish the house, consequently, it is irrelevant from being in the dataset to be considered to train and find the relevant model to predict the price of the test set(`housedataTEST.csv`). There are 17384 houses' data along with 20 variables and 4229 houses' data along with 19 variables after eliminating the `id` variable one in training dataset of both `housedata.csv` and `housedataTEST.csv` files. 
+
+```{r, echo = FALSE, results = "hide"}
+housedata <- read.csv("./DATA/housedata.csv", colClasses = c(id = "character", date = "character", yr_built = "character", zipcode = "character"))
+housedata$date <- as.Date(housedata$date, "%Y%m%d")
+housedata$waterfront <- factor(housedata$waterfront, labels = c("No", "Yes"))
+# housedata$yr_built <- as.Date(housedata$yr_built, "%Y")
+housedata$yr_built <- as.Date(ISOdate(housedata$yr_built, 9, 1))  # Complete Year, Sept 1
+housedata$yr_renovated <- ifelse(housedata$yr_renovated == 0, NA, housedata$yr_renovated)
+housedata$yr_renovated <- as.character(housedata$yr_renovated)
+housedata$yr_renovated <- as.Date(housedata$yr_renovated, "%Y")
+
+
+housedataT <- read.csv("./DATA/housedataTEST.csv", 
+                      colClasses = c(id = "character", date = "character", yr_built = "character", zipcode = "factor", grade = "factor"))
+housedataT$date <- as.Date(housedataT$date, "%Y%m%d")
+housedataT$waterfront <- factor(housedataT$waterfront, labels = c("No", "Yes"))
+housedataT$condition <- factor(housedataT$condition, labels = c("poor", "fair", "average", "good", "very good"))
+housedataT$yr_renovated <- ifelse(housedataT$yr_renovated == 0, housedataT$yr_built, housedataT$yr_renovated)
+housedataT$yr_built <- as.Date(ISOdate(housedataT$yr_built, 9, 1))  # Complete Year, Sept 1
+housedataT$yr_renovated <- as.Date(ISOdate(housedataT$yr_renovated, 9, 1))  # Last renovated Year, Sept 1
+housedataT <- housedataT[, -1]
+housedata <- housedata[, -1]
+
+datatable(housedata[, 2:10], rownames = FALSE)
+str(housedata)
+dim(housedata)
+dim(housedataT)
+```
+
+Below is the map of both the given dataset of houses for training purposes (`housedata.csv`) represented through blue dots and the given dataset of houses for testing purposes (`housedataTEST.csv`) represented through black dots on the google map according to their lattitude and longitude information.
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(ggmap)
+KingMap <-
+  get_map(
+    location = c(lon = -122.1, lat = 47.48),
+    zoom = 10,
+    source = "google",
+    maptype = "roadmap"
+  )
+ggmap(KingMap) +
+  geom_point(
+    aes(x = housedata$long, y = housedata$lat),
+    data = housedata,
+    alpha = .2,
+    color = "blue",
+    size = 0.01
+  ) +
+  geom_point(
+    aes(x = housedataT$long, y = housedataT$lat),
+    data = housedataT,
+    alpha = .2,
+    color = "black",
+    size = 0.01
+  ) +
+  ggtitle("Houses Sold in King County, Wa (2014-2015)") +
+  labs(x = "longitute", y = "latitude")
+```
+
+## Statistical Modeling
+
+Standard Backward and Forward Selection Methods with the R package, `leaps`, along with Backward and Forward Selection Methods with stepAIC (Akaike Information Criterion) techniques were utilized to train and create model from the original given dataset `housedata.csv`. StepAIC helps to measure the quality of each model relative to other models which recommends the appropriate model for the problem. Moreover, cross-validation will be used to analyze and validate the model. The logistics, explanation, and elaborated examples can be examined in ***An introduction to statistical learning: with applications in $R$*** [@james_introduction_2013].
+
+
+## Reproducibility
+
+Under the assumption that the link to the original dataset remains current and the contents thereof remain unchanged, then the document can be reproduced with all the original analyses. Moreover, this paper along with all the analyses and the computation can be seen through the `.html` file and be reproduced by running the original `.Rmd` file with RStudio,  The R packages `knitr` [@R-knitr], `rmarkdown` [@R-rmarkdown], `boot`[@R-boot], `leaps`[@R-leaps], `MASS` [@R-MASS], and `bookdown` [@R-bookdown] will need to be installed on the user’s computer. The user will need to install `bookdown` from `GitHub` by typing the following at the R prompt:
+
+```{}
+devtools::install_github("rstudio/bookdown")
+```
+
+# Results
+
+The first two models of Backward and Forward Selection Methods with `leaps` included all 18 variables except `id` variable in the dataset. However, the data used to develop the final model includes only 12 variables such as information on the number of `bedrooms`, `bathrooms`, `floors`, the measurement of lattitude(`lat`), longitude(`long`), zipcode number (`zipcode`), `view`, the availability of `waterfront`, and `sqft_living`, `sqft_lot`, `sqft_living15`. The reason behind for choosing those specific variables are because while using the stepAIC with both backward and forward selection, those variables have significantly small p-value which indicated a strong relationship of them with the variable price. Additionally, there were no missing values in the “cleaned” data, which had `r dim(housedata)[1]` houses' information. 
+
+```{r, results = 'hide', echo = FALSE, message = FALSE, warning = FALSE}
+fitF <- regsubsets(price ~., data=housedata, nvmax = 85, method = "forward")
+fitFS <- summary(fitF)
+fitFBICN <- which.min(fitFS$bic)
+fitFBIC <- coef(fitF, fitFBICN)
+
+fitB <- regsubsets(price ~., data=housedata, nvmax = 85, method = "backward")
+fitBS <- summary(fitB)
+fitBBICN <- which.min(fitBS$bic)
+fitBBIC <- coef(fitB, fitBBICN)
+```
+
+```{r}
+fitFBIC
+fitBBIC
+```
+
+There are `r fitFBICN` coefficients and `r fitBBICN` coefficients selected with BIC through Forward and Backward selection through `leaps`. Moreover, the coefficients' values are listed above as Forward's coefficients first then Backward's coefficients second respectively for each model. 
+
+The goal is to create a model with as small of a test error as possible. Note that the square root of the training RSS from the given model `mod.all` in the King County Housing Data document was $1.5018076×10^5$. Therefore, I personally consider to investigate more possible models which could be doing the backward and forward selection through the `stepAIC` method. 
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+mod_fwd <- stepAIC(lm(price ~ 1, data = housedata), scope = .~bedrooms + bathrooms + sqft_living + sqft_lot + floors + waterfront + view  + sqft_above + zipcode + lat + long  + sqft_living15 + zipcode, direction = "forward", test = "F")
+mod_bwd <- stepAIC(lm(price ~ bedrooms + bathrooms + sqft_living + sqft_lot + floors + waterfront + view  + sqft_above + zipcode + lat + long  + sqft_living15, data = housedata), direction = "backward", test = "F")
+sqrtRE_fwd <- summary(mod_fwd)$sigma
+sqrtRE_bwd <- summary(mod_bwd)$sigma
+```
+
+```{r}
+#Cross Validation Process with K-Fold method
+mod <- glm(price ~ bedrooms + bathrooms + sqft_living + sqft_lot + floors + waterfront + view  + sqft_above + zipcode + lat + long  + sqft_living15, data = housedata)
+CV <- cv.glm(data = housedata, glmfit = mod, K = 5)$delta
+CV
+CV_2 <- CV^.5
+```
+
+The result of residual standard error is not as optimistic as I expected, after a lot of consideration of variables to be included and data manipulation, I was expecting some smaller residual standard error than the one given from Dr. Arnholt with $1.5018076×10^5$ and my is $`r CV_2[1]`$ that has almost $19,000$ in the difference from the errors that I received from using the k-fold cross-validation method to validate my model.  
+
+Both models did give similar results, especially the same results in residual standard error, $`r sqrtRE_fwd`$(sqrtRE_fwd) = $`r sqrtRE_bwd`$(sqrtRE_bwd).However, since backwards selection has an advantage over forward selection because backwards selection starts with everything in the model, so their joint predictive capability will be seen while forward selection may have fail to identify them. Therefore, it is more secured to use the backward selection in my opinion. 
+
+The final model used was: 
+$\beta_1(bedrooms) + \beta_2(bathrooms) + \beta_3(sqft_living) + \beta_4(sdft_lot) + \beta_5(floors) + \beta_6(floors) + \beta_7(waterfront) + \beta_8(view) + \beta_9(sqft_above) + \beta_10(zipcode) + \beta_11(lat) + \beta_12(sqft_living15)$
+
+With the achieved model from the analysis above, the user can use it to predict all the price data in the testing dataset (`housedataTEST.csv`).
+
+```{r, message = FALSE, warning = FALSE}
+Tu_Huy <- predict(mod_bwd, newdata = housedataT)
+write.csv(Tu_Huy, file="Tu_Huy.csv")
+head(Tu_Huy)
+```
+
+Above is the first six predicted results from running the model against the testing dataset. The model can behave differently based on the time period and the area that it will be used for since it was trained specifically for this case.  
+
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning = FALSE}
+PackagesUsed <- c("rmarkdown", "knitr", "base", "xtable", "ggplot2", "leaps", "bookdown", "boot", "MASS")
+# Write bib information
+knitr::write_bib(PackagesUsed, file = "./BIB/PackagesUsed.bib")
+# Load packages
+lapply(PackagesUsed, library, character.only = TRUE)
+```
+
+# References
